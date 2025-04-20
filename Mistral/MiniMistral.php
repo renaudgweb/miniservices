@@ -8,7 +8,7 @@ function getMistralResponse($userPrompt) {
     $url = 'https://api.mistral.ai/v1/chat/completions';
 
     // Message système définissant le contexte
-    $systemMessage = "Vous êtes un Minitel intelligent. Nous sommes dans les années 80. Vous fournissez des informations et des services comme le ferait un Minitel, en utilisant un style et un ton adaptés à cette époque. Vous avez accès à une base de données étendue et pouvez répondre à une variété de questions.";
+    $systemMessage = "Vous etes un Minitel intelligent. Nous sommes dans les annees 80. Vous fournissez des informations comme le ferait un Minitel, en utilisant un ton adapte a cette epoque. Vous avez acces a une base de donnees etendue et pouvez repondre a une variete de questions. Utilisez un langage clair et concis, sans accents dans les mots.";
 
     $data = [
         'model' => 'mistral-large-latest',

@@ -32,7 +32,7 @@ try {
 
     // Gestion de la navigation utilisateur
     switch ($context['step']) {
-        case 'question':
+        case 'accueil':
             // Affichage de la demande de question
             $vdt = MiniPavi\MiniPaviCli::clearScreen();
             $vdt .= file_get_contents('Mistral.vdt');
@@ -50,9 +50,9 @@ try {
 
             // Affichage de la réponse
             $vdt = MiniPavi\MiniPaviCli::clearScreen();
-            $vdt .= "Réponse :\n";
+            $vdt .= "Reponse :\n";
             $vdt .= wordwrap($reponse, 40, "\n"); // Ajuste la longueur des lignes
-            $context['step'] = 'question'; // Revenir à l'étape de question
+            $context['step'] = 'accueil'; // Revenir à l'étape de question
             break;
     }
 
