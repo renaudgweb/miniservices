@@ -48,8 +48,8 @@ Pour installer et configurer ces applications, suivez les instructions ci-dessou
 
 1. **Cloner le dépôt** :
    ```bash
-   git clone https://github.com/votre-utilisateur/minipavi-apps.git
-   cd minipavi-apps
+   git clone https://github.com/renaudgweb/miniservices.git
+   cd miniservices
    ```
 
 2. **Configurer les applications** :
