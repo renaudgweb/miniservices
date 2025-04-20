@@ -4,12 +4,12 @@
  * @author RenaudG
  * @version 0.1 Avril 2025
  *
- * Script via API Coingecko
+ * Script via API gouv
  * 
  */
 
 require "../MiniPaviCli.php";
-require "MiniCrypto.php";
+require "MiniCarbu.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
 error_reporting(E_ERROR);
