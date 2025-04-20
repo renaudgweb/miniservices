@@ -59,6 +59,14 @@ Pour installer et configurer ces applications, suivez les instructions ci-dessou
 3. **Lancer les applications** :
       - Accédez aux applications via un émulateur Minitel ou un véritable terminal Minitel connecté à MiniPavi.
 
+## 📚 ressources
+
+🔗 [Import Miedit](https://www.minipavi.fr/miedit/minipavi-expMiedit.html)
+
+🔗 [MiEdit](https://minitel.cquest.org/)
+
+🔗 [minipaviCli](https://github.com/ludosevilla/minipaviCli)
+
 ## 📬 Contact
 
 Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à nous contacter directement.

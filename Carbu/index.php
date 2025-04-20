@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.4 Avril 2025
+ * @version 0.1 Avril 2025
  *
  * Script via API Coingecko
  * 
