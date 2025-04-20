@@ -51,7 +51,7 @@ Contient les fonctions utilisées par `index.php` pour récupérer les prix des 
 
 ## Version 🔄
 
-- **0.3** (Avril 2025) 📅
+- **0.4** (Avril 2025) 📅
 
 ## Ressources 📚
 

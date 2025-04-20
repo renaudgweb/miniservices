@@ -24,6 +24,6 @@
 
 ## 📬 Contact
 
-Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à nous contacter directement.
+Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à me contacter directement.
 
 Merci d'utiliser 3614 MISTRAL ! 😊
