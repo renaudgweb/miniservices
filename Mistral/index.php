@@ -35,6 +35,7 @@ try {
         case 'question':
             // Affichage de la demande de question
             $vdt = MiniPavi\MiniPaviCli::clearScreen();
+            $vdt .= file_get_contents('Mistral.vdt');
             $vdt .= "Posez votre question :\n";
             $cmd = MiniPavi\MiniPaviCli::createInputMsgCmd(1, 3, 40, 3, MSK_ENVOI, true, ' ', '');
             $context['step'] = 'attente_reponse';
