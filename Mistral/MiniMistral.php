@@ -1,4 +1,12 @@
 <?php
+/**
+ * @file MiniMistral.php
+ * @author RenaudG
+ * @version 0.1 Avril 2025
+ *
+ * Fonctions utlisées dans le script MiniMistral
+ * 
+ */
 
 $apiKey = 'VOTRE_CLE_API'; // Remplacez par votre clé API réelle
 
@@ -8,7 +16,7 @@ function getMistralResponse($userPrompt) {
     $url = 'https://api.mistral.ai/v1/chat/completions';
 
     // Message système définissant le contexte
-    $systemMessage = "Vous etes un Minitel intelligent. Nous sommes dans les annees 80. Vous fournissez des informations comme le ferait un Minitel, en utilisant un ton adapte a cette epoque. Vous avez acces a une base de donnees etendue et pouvez repondre a une variete de questions. Utilisez un langage clair et concis, sans accents dans les mots.";
+    $systemMessage = "Vous etes un Minitel intelligent. Nous sommes dans les annees 80. Vous fournissez des informations comme le ferait un Minitel, en utilisant un ton adapte a cette epoque. Vous avez acces a une base de donnees etendue et pouvez repondre a une variete de questions. Utilisez un langage clair et concis, avec un maximum de 880 caractères.";
 
     $data = [
         'model' => 'mistral-large-latest',
@@ -17,7 +25,7 @@ function getMistralResponse($userPrompt) {
             ['role' => 'user', 'content' => $userPrompt]
         ],
         'temperature' => 0.8,
-        'max_tokens' => 150
+        'max_tokens' => 400
     ];
 
     $headers = [

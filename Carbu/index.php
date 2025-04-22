@@ -4,7 +4,7 @@
  * @author RenaudG
  * @version 0.1 Avril 2025
  *
- * Script via API gouv
+ * Script via API data.economie.gouv.fr
  * 
  */
 
@@ -24,3 +24,47 @@ try {
     } else {
         $context = unserialize(MiniPavi\MiniPaviCli::$context);
     }
+
+    // Initialisation des variables
+    $vdt = ''; // Le contenu vidéotex à envoyer au Minitel de l'utilisateur
+    $cmd = null; // La commande à exécuter au niveau de MiniPavi
+    $directCall = false; // Ne pas rappeler le script immédiatement
+
+    // Gestion de la navigation utilisateur
+    switch ($context['step']) {
+        case 'accueil':
+            // Affichage de la demande de question
+            $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
+            $vdt .= file_get_contents('Carbu.vdt');
+            $vdt .= MiniPavi\MiniPaviCli::setPos(1, 12);
+            $vdt .= VDT_TXTWHITE . "Ville ou code postal :";
+            $cmd = MiniPavi\MiniPaviCli::createInputTxtCmd(1, 13, 40, MSK_ENVOI, true, '.', '');
+            $context['step'] = 'attente_reponse';
+            break;
+
+            case 'attente_reponse':
+            // Récupération de la question de l'utilisateur
+            $location = MiniPavi\MiniPaviCli::$content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
+            list($latitude, $longitude) = getCoordinatesFromOpenMeteo($location);
+            $nearbyStations = getNearbyStations($latitude, $longitude);
+            $response = displayFuelPrices($nearbyStations);
+
+            // Affichage de la réponse
+            $vdt = MiniPavi\MiniPaviCli::clearScreen();
+            $vdt .= MiniPavi\MiniPaviCli::setPos(1, 3);
+            $vdt .= MiniPavi\MiniPaviCli::toG2($reponse);
+            $context['step'] = 'accueil'; // Revenir à l'étape de question
+            break;
+}
+
+    // URL à appeler lors de la prochaine saisie utilisateur
+    $nextPage = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+
+    // Envoi à la passerelle du contenu à afficher, de l'URL du prochain script à appeler,
+    // du contexte utilisateur sérialisé, et de l'éventuelle commande à exécuter
+    MiniPavi\MiniPaviCli::send($vdt, $nextPage, serialize($context), true, $cmd, $directCall);
+} catch (Exception $e) {
+    throw new Exception('Erreur MiniPavi: ' . $e->getMessage());
+}
+exit;
+?>
