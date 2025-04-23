@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.1 Avril 2025
+ * @version 0.2 Avril 2025
  *
  * Script via API MistralAI
  * 
@@ -37,7 +37,7 @@ try {
             $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
             $vdt .= file_get_contents('Mistral.vdt');
             $vdt .= MiniPavi\MiniPaviCli::setPos(1, 12);
-            $vdt .= VDT_TXTWHITE . "Demander à Mistral :";
+            $vdt .= MiniPavi\MiniPaviCli::toG2("Demander à Mistral :") . VDT_TXTWHITE;
             $cmd = MiniPavi\MiniPaviCli::createInputMsgCmd(1, 13, 40, 3, MSK_ENVOI, true, '.', '');
             $context['step'] = 'attente_reponse';
             break;

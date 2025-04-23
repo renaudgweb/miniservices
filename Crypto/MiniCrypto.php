@@ -2,13 +2,13 @@
 /**
  * @file MiniCrypto.php
  * @author RenaudG
- * @version 0.4 Avril 2025
+ * @version 0.5 Avril 2025
  *
  * Fonctions utlisées dans le script MiniCrypto
  * 
  */
 
-$URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum%2Cripple%2Cbinancecoin%2Csolana%2Ctron%2Cdogecoin%2Ccardano%2C&vs_currencies=usd%2Ceur';
+$URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum%2Cripple%2Cbinancecoin%2Csolana%2Ctron%2Cdogecoin%2Ccardano%2C&vs_currencies=eur';
 
 function getPrices() {
     global $URL;
@@ -37,7 +37,7 @@ function getPrices() {
         if (isset($data[$crypto])) {
             $tRes[] = array(
                 'titre' => ucfirst($crypto), // Mettre la première lettre en majuscule
-                'desc' => $data[$crypto]['eur'] . " EUR (" . $data[$crypto]['usd'] . " \$US)",
+                'desc' => round($data[$crypto]['eur'] * 6.55957, 2) . " FRF (" . $data[$crypto]['eur'] . " EUR) "
             );
         }
     }

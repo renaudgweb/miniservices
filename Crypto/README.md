@@ -20,7 +20,7 @@ Contient les fonctions utilisées par `index.php` pour récupérer les prix des 
 
 ## Fonctionnalités
 
-- **Récupération des prix des cryptomonnaies** 💸 : Utilise l'API de Coingecko pour obtenir les prix actuels des cryptomonnaies suivantes en Euros (€) et Dollars Américains ($) :
+- **Récupération des prix des cryptomonnaies** 💸 : Utilise l'API de Coingecko pour obtenir les prix actuels des cryptomonnaies suivantes en Francs (FRF) et Euros (€) :
   - Bitcoin (BTC)
   - Ethereum (ETH)
   - Ripple (XRP)
@@ -51,7 +51,7 @@ Contient les fonctions utilisées par `index.php` pour récupérer les prix des 
 
 ## Version 🔄
 
-- **0.4** (Avril 2025) 📅
+- **0.5** (Avril 2025) 📅
 
 ## Ressources 📚
 
