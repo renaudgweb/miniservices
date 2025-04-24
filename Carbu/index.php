@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.2 Avril 2025
+ * @version 0.3 Avril 2025
  *
  * Script via API data.economie.gouv.fr
  * 
@@ -13,8 +13,8 @@ require "../DisplayPaginatedText.php";
 require "MiniCarbu.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR);
-ini_set('display_errors',0);
+error_reporting(E_ERROR|E_WARNING);
+ini_set('display_errors',1);
 
 try {
     MiniPavi\MiniPaviCli::start();
@@ -56,43 +56,63 @@ try {
             if (! ($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
 
                 // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
-                $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 3);
+                $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
+                // Effacement du texte affiché
+                $vdtClearPage = MiniPavi\MiniPaviCli::setPos(3, 23);
+                $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+                for ($i = 0; $i < 18; $i++) {
+                    $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 21 - $i);
+                    $vdtClearPage .= VDT_BGBLUE . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+                }
+                // titre Cyan, double hauteur
+                $vdtPreTitle = '';
+
                 // Position du titre
                 $lTitle = 2;
-                $cTitle = 11;
+                $cTitle = 2;
                 // Position du compteur de page
                 $lCounter = 21;
                 $cCounter = 35;
+
+                // Compteur de page couleur Cyan
+                $vdtPreCounter = VDT_TXTCYAN;
+
                 // Position début du texte
-                $lText = 5;
+                $lText = 3;
                 $cText = 2;
+
                 // Longueur maximum d'une ligne
                 $maxLengthText = 38;
+
+                // Couleur normale : jaune
+                $normalColor = VDT_TXTWHITE;
+
+                // Couleur spéciale : blanc
+                $specialColor = VDT_TXTYELLOW;
+
                 // Rien de particulier à afficher avant chaque ligne
                 $vdtPreText = '';
-                // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas gérée par l'objet, mais directemant par le script)
-                $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK.VDT_FDINV . " Sommaire ";
+
+                // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas géré par l'objet, mais directement par le script)
+                $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTWHITE . VDT_FDINV . " Sommaire ";
+
                 // Bas de page si uniquement Suite accepté
-                $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK.VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+                $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
                 // Bas de page si uniquement Retour accepté
-                $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+                $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTWHITE . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
                 // Bas de page si Suite et Retour acceptés
-                $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM. " ou " . VDT_FDINV . " Sommaire ";
+                $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
                 // Message d'erreur si première page atteinte et appui sur Retour
                 $vdtErrNoPrev = MiniPavi\MiniPaviCli::toG2("Première page !");
+
                 // Message d'erreur si dernière page atteinte et appui sur Suite
                 $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
+
                 // 16 lignes maximum par page
                 $lines = 16;
-
-                // Assurez-vous que ces variables sont définies
-                $vdtStart = '';
-                $vdtClearPage = '';
-                $vdtPreTitle = '';
-                $vdtPreCounter = '';
-                $normalColor = '';
-                $specialColor = '';
 
                 // Initialisation
                 $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);
