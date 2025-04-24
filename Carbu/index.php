@@ -94,23 +94,17 @@ try {
                 $normalColor = '';
                 $specialColor = '';
 
-                // initialisation
+                // Initialisation
                 $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);
-                // Execution
+                // Exécution
                 $r = $objDisplayPaginatedText->process('', $vdt);
-
             } else {
-                // L'utilisateur a déjà l'objet dans son contexte, execution
+                // L'utilisateur a déjà l'objet dans son contexte, exécution
                 $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
             }
-            // A ce stade, $vdt contient le code videotex a enoyer à l'utilisateur
-            // On conserve l'objet dans la contexte utilisateur pour le récupérer lors de sa prochaine action
+            // Conserver l'objet dans le contexte utilisateur pour le récupérer lors de sa prochaine action
             $context['objDisplayPaginatedText'] = $objDisplayPaginatedText;
-            // On ne change pas la valeur de $step car à la prochaine action on execute de nouveau cette partie du script
             break;
-
-            //$context['step'] = 'accueil'; // Revenir à l'étape de question
-            //break;
     }
 
     // URL à appeler lors de la prochaine saisie utilisateur
