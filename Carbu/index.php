@@ -2,13 +2,14 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.1 Avril 2025
+ * @version 0.2 Avril 2025
  *
  * Script via API data.economie.gouv.fr
  * 
  */
 
 require "../MiniPaviCli.php";
+require "../DisplayPaginatedText.php";
 require "MiniCarbu.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
@@ -42,20 +43,75 @@ try {
             $context['step'] = 'attente_reponse';
             break;
 
-            case 'attente_reponse':
+        case 'attente_reponse':
             // Récupération de la question de l'utilisateur
             $location = MiniPavi\MiniPaviCli::$content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
             list($latitude, $longitude) = getCoordinatesFromOpenMeteo($location);
             $nearbyStations = getNearbyStations($latitude, $longitude);
-            $response = displayFuelPrices($nearbyStations);
+            $textFilename = 'stations.txt'; // Nom du fichier où les informations seront écrites
+            displayFuelPrices($nearbyStations, $textFilename);
 
             // Affichage de la réponse
-            $vdt = MiniPavi\MiniPaviCli::clearScreen();
-            $vdt .= MiniPavi\MiniPaviCli::setPos(1, 3);
-            $vdt .= MiniPavi\MiniPaviCli::toG2($reponse);
-            $context['step'] = 'accueil'; // Revenir à l'étape de question
+            $objDisplayPaginatedText = @$context['objDisplayPaginatedText'];
+            if (! ($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
+
+                // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
+                $vdt = MiniPavi\MiniPaviCli::clearScreen();
+                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 3);
+                // Position du titre
+                $lTitle = 2;
+                $cTitle = 11;
+                // Position du compteur de page
+                $lCounter = 21;
+                $cCounter = 35;
+                // Position début du texte
+                $lText = 5;
+                $cText = 2;
+                // Longueur maximum d'une ligne
+                $maxLengthText = 38;
+                // Rien de particulier à afficher avant chaque ligne
+                $vdtPreText = '';
+                // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas gérée par l'objet, mais directemant par le script)
+                $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK.VDT_FDINV . " Sommaire ";
+                // Bas de page si uniquement Suite accepté
+                $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK.VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+                // Bas de page si uniquement Retour accepté
+                $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+                // Bas de page si Suite et Retour acceptés
+                $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM. " ou " . VDT_FDINV . " Sommaire ";
+                // Message d'erreur si première page atteinte et appui sur Retour
+                $vdtErrNoPrev = MiniPavi\MiniPaviCli::toG2("Première page !");
+                // Message d'erreur si dernière page atteinte et appui sur Suite
+                $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
+                // 16 lignes maximum par page
+                $lines = 16;
+
+                // Assurez-vous que ces variables sont définies
+                $vdtStart = '';
+                $vdtClearPage = '';
+                $vdtPreTitle = '';
+                $vdtPreCounter = '';
+                $normalColor = '';
+                $specialColor = '';
+
+                // initialisation
+                $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);
+                // Execution
+                $r = $objDisplayPaginatedText->process('', $vdt);
+
+            } else {
+                // L'utilisateur a déjà l'objet dans son contexte, execution
+                $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
+            }
+            // A ce stade, $vdt contient le code videotex a enoyer à l'utilisateur
+            // On conserve l'objet dans la contexte utilisateur pour le récupérer lors de sa prochaine action
+            $context['objDisplayPaginatedText'] = $objDisplayPaginatedText;
+            // On ne change pas la valeur de $step car à la prochaine action on execute de nouveau cette partie du script
             break;
-}
+
+            //$context['step'] = 'accueil'; // Revenir à l'étape de question
+            //break;
+    }
 
     // URL à appeler lors de la prochaine saisie utilisateur
     $nextPage = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
