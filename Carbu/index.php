@@ -13,8 +13,8 @@ require "../DisplayPaginatedText.php";
 require "MiniCarbu.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR|E_WARNING);
-ini_set('display_errors',1);
+error_reporting(E_ERROR);
+ini_set('display_errors',0);
 
 try {
     MiniPavi\MiniPaviCli::start();

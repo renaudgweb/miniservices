@@ -37,7 +37,7 @@ function getPrices() {
         if (isset($data[$crypto])) {
             $tRes[] = array(
                 'titre' => ucfirst($crypto), // Mettre la première lettre en majuscule
-                'desc' => round($data[$crypto]['eur'] * 6.55957, 2) . " FRF (" . $data[$crypto]['eur'] . " EUR) "
+                'desc' => round($data[$crypto]['eur'] * 6.55957, 2) . "F (" . $data[$crypto]['eur'] . "EUR)"
             );
         }
     }

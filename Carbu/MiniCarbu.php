@@ -142,7 +142,7 @@ function displayFuelPrices($stations, $filename) {
 
                 // Convertir le prix en francs
                 $fuelPriceInFrancs = round($fuelPriceInEuros * 6.55957, 2);
-                $content .= " - $fuelName: $fuelPriceInFrancs FRF ($fuelPriceInEuros EUR)\n";
+                $content .= " - $fuelName: " . $fuelPriceInFrancs . "F (" . $fuelPriceInEuros . "EUR)\n";
             }
         } else {
             echo "No fuel prices available.\n";

@@ -163,3 +163,230 @@ try {
 }
 exit;
 ?>
+
+
+
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+
+
+
+<?php
+
+
+// Classe DisplayPaginatedText
+
+
+case 10:
+    if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
+        $step = 0; // Retour au sommaire
+        break;
+    }
+    // Récupération de l'éventuel objet existant dans le contexte utilisateur
+    $objDisplayPaginatedText = @$context['objDisplayPaginatedText'];
+    if (!($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
+        // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
+        // Fond de page
+        $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
+        $vdtStart .= file_get_contents('fond-de-page.vdt');
+        // Effacement du texte affiché
+        $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(3, 23);
+        $vdtClearPage .= VDT_TXTBLACK . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+        for ($i = 0; $i < 18; $i++) {
+            $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 21 - $i);
+            $vdtClearPage .= VDT_BGBLUE . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+        }
+        // fichier contenant le texte
+        $textFilename = 'le-texte.txt';
+        // titre Cyan , double hauteur
+        $vdtPreTitle = VDT_TXTCYAN . VDT_SZDBLH;
+        // Position du titre
+        $lTitle = 2;
+        $cTitle = 11;
+        // Position du compteur de page
+        $lCounter = 21;
+        $cCounter = 35;
+        // Compteur de page couleur Cyan
+        $vdtPreCounter = VDT_TXTCYAN;
+        // Position début du texte
+        $lText = 5;
+        $cText = 2;
+        // Longueur maximum d'une ligne
+        $maxLengthText = 38;
+        // Couleur normale : jaune
+        $normalColor = VDT_TXTYELLOW;
+        // Couleur spéciale : blanc
+        $specialColor = VDT_TXTWHITE;
+        // Rien de particulier à afficher avant chaque ligne
+        $vdtPreText = '';
+        // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas gérée par l'objet, mais directement par le script)
+        $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Sommaire ";
+        // Bas de page si uniquement Suite accepté
+        $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+        // Bas de page si uniquement Retour accepté
+        $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+        // Bas de page si Suite et Retour acceptés
+        $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+        // Message d'erreur si première page atteinte et appui sur Retour
+        $vdtErrNoPrev = MiniPavi\MiniPaviCli::toG2("Première page !");
+        // Message d'erreur si dernière page atteinte et appui sur Suite
+        $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
+        // 16 lignes maximum par page
+        $lines = 16;
+        // initialisation
+        $objDisplayPaginatedText = new DisplayPaginatedText(
+            $vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle,
+            $lCounter, $cCounter, $vdtPreCounter, $lText, $cText,
+            $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour,
+            $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines
+        );
+        // Execution
+        $r = $objDisplayPaginatedText->process('', $vdt);
+    } else {
+        // L'utilisateur a déjà l'objet dans son contexte, execution
+        $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
+    }
+    // A ce stade, $vdt contient le code videotex à envoyer à l'utilisateur
+    // On conserve l'objet dans le contexte utilisateur pour le récupérer lors de sa prochaine action
+    $context['objDisplayPaginatedText'] = $objDisplayPaginatedText;
+    // On ne change pas la valeur de $step car à la prochaine action on exécute de nouveau cette partie du script
+    break 2;
+?>
+
+
+
+
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+
+
+
+<?php
+
+
+//Classe DisplayList
+
+
+case 20:
+    if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
+        $step = 10; // Retour au sommaire
+        break;
+    }
+
+    // Liste des éléments
+    $list = array(
+        0 => '1er choix',
+        1 => '2ème choix',
+        2 => '3ème choix',
+        3 => '4ème choix'
+    );
+
+    // Récupération de l'éventuel objet existant dans le contexte utilisateur
+    $objDisplayList = @$context['objDisplayList'];
+    if (!($objDisplayList instanceof DisplayList)) {
+        // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
+        $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
+        $vdtStart .= file_get_contents('fond-de-page.vdt');
+
+        // Effacement du texte affiché
+        $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(3, 23);
+        $vdtClearPage .= VDT_TXTBLACK . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+        for ($i = 0; $i < 18; $i++) {
+            $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 21 - $i);
+            $vdtClearPage .= VDT_BGBLUE . MiniPavi\MiniPaviCli::repeatChar(' ', 33);
+        }
+
+        // Position du compteur de page
+        $lCounter = 21;
+        $cCounter = 35;
+
+        // Compteur de page couleur Cyan
+        $vdtPreCounter = VDT_TXTCYAN;
+
+        // Position début du texte
+        $lText = 5;
+        $cText = 2;
+
+        // On affiche rien de spécial avant chaque élément
+        $vdtPreText = '';
+
+        // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas géré par l'objet, mais directement par le script)
+        $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . MiniPavi\MiniPaviCli::toG2("N°+ ") . VDT_FDINV . " Envoi " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+        // Bas de page si uniquement Suite accepté
+        $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . MiniPavi\MiniPaviCli::toG2("N°+ ") . VDT_FDINV . " Envoi " . VDT_FDNORM . " " . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Somm. ";
+
+        // Bas de page si uniquement Retour accepté
+        $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . MiniPavi\MiniPaviCli::toG2("N°+ ") . VDT_FDINV . " Envoi " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Somm. ";
+
+        // Bas de page si Suite et Retour acceptés
+        $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 23) . VDT_TXTBLACK . MiniPavi\MiniPaviCli::toG2("N°+ ") . VDT_FDINV . " Envoi " . VDT_FDNORM . " " . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM;
+
+        // Message d'erreur si première page atteinte et appui sur Retour
+        $vdtErrNoPrev = MiniPavi\MiniPaviCli::toG2("Première page !");
+
+        // Message d'erreur si dernière page atteinte et appui sur Suite
+        $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
+
+        // Message d'erreur si choix incorrect saisi
+        $vdtErrChoice = MiniPavi\MiniPaviCli::toG2("Choix incorrect !");
+
+        // 8 éléments maximum par page
+        $lines = 8;
+
+        // 1 ligne vide entre chaque élément
+        $spaceLines = 1;
+
+        // Le numéro de l'élément sera sur fond bleu, texte vert, inversé.
+        // Le signe # représente le numéro de l'élément et est modifié à la volée
+        $vdtItemNum = VDT_BGBLUE . VDT_TXTGREEN . VDT_FDINV . ' # ' . VDT_FDNORM . VDT_TXTYELLOW;
+
+        // Initialisation
+        $objDisplayList = new DisplayList(
+            $vdtStart,
+            $vdtClearPage,
+            $list,
+            $lCounter,
+            $cCounter,
+            $vdtPreCounter,
+            $vdtItemNum,
+            $lText,
+            $cText,
+            $vdtPreText,
+            $vdtNone,
+            $vdtSuite,
+            $vdtRetour,
+            $vdtSuiteRetour,
+            $vdtErrNoPrev,
+            $vdtErrNoNext,
+            $vdtErrChoice,
+            $lines,
+            $spaceLines
+        );
+
+        // Exécution
+        $r = $objDisplayList->process('', '', $vdt);
+    } else {
+        // L'utilisateur a déjà l'objet dans son contexte, exécution
+        $r = $objDisplayList->process(MiniPavi\MiniPaviCli::$fctn, MiniPavi\MiniPaviCli::$content[0], $vdt);
+    }
+
+    // On conserve l'objet dans le contexte utilisateur pour le récupérer lors de sa prochaine action
+    $context['objDisplayList'] = $objDisplayList;
+
+    // Attente d'une saisie
+    $cmd = MiniPavi\MiniPaviCli::createInputTxtCmd(34, 23, 2, MSK_ENVOI | MSK_SOMMAIRE | MSK_REPETITION | MSK_SUITE | MSK_RETOUR, true, ' ', '');
+
+    if ($r == -1 || $r === false) {
+        // L'utilisateur n'a pas saisi de choix (ou choix invalide)
+        break 2;
+    }
+
+    // Un choix valide a été saisi, $r représente l’index du choix dans $list
+    // On traite le choix saisi
+    $vdt .= MiniPavi\MiniPaviCli::writeLine0('Choix = ' . $list[$r]);
+    break 2;
+
+
+?>
