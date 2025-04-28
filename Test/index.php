@@ -1,6 +1,6 @@
 <?php
 
-require "MiniPaviCli.php"; // Inclusion de la librairie
+require "../MiniPaviCli.php"; // Inclusion de la librairie
 
 try {
     MiniPavi\MiniPaviCli::start();

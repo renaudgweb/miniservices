@@ -37,8 +37,11 @@ try {
             $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
             $vdt .= file_get_contents('Mistral.vdt');
             $vdt .= MiniPavi\MiniPaviCli::setPos(2, 12);
-            $vdt .= MiniPavi\MiniPaviCli::toG2("Demander à Mistral :") . VDT_TXTWHITE;
-            $cmd = MiniPavi\MiniPaviCli::createInputMsgCmd(1, 13, 40, 3, MSK_ENVOI, true, '.', '');
+            $vdt .= MiniPavi\MiniPaviCli::toG2("Demander au Chat") . VDT_TXTWHITE;
+            $cmd = MiniPavi\MiniPaviCli::createInputMsgCmd(2, 13, 39, 8, MSK_ENVOI, true, '.', '');
+            if (MiniPavi\MiniPaviCli::$content[0]) {
+                $vdt .= MiniPavi\MiniPaviCli::writeLine0("...", $blink=true);
+            }
             $context['step'] = 'attente_reponse';
             break;
 
