@@ -36,7 +36,7 @@ try {
             // Affichage de la demande de question
             $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
             $vdt .= file_get_contents('Mistral.vdt');
-            $vdt .= MiniPavi\MiniPaviCli::setPos(1, 12);
+            $vdt .= MiniPavi\MiniPaviCli::setPos(2, 12);
             $vdt .= MiniPavi\MiniPaviCli::toG2("Demander à Mistral :") . VDT_TXTWHITE;
             $cmd = MiniPavi\MiniPaviCli::createInputMsgCmd(1, 13, 40, 3, MSK_ENVOI, true, '.', '');
             $context['step'] = 'attente_reponse';
@@ -52,7 +52,7 @@ try {
             // Affichage de la réponse
             $vdt = MiniPavi\MiniPaviCli::clearScreen();
             $vdt .= file_get_contents('LeChat.vdt');
-            $vdt .= MiniPavi\MiniPaviCli::setPos(1, 7);
+            $vdt .= MiniPavi\MiniPaviCli::setPos(2, 7);
             $vdt .= MiniPavi\MiniPaviCli::toG2(substr($reponse, 0, 600)) . VDT_CLRLN;
             $context['step'] = 'accueil'; // Revenir à l'étape de question
             break;
