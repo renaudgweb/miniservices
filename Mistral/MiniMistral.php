@@ -2,7 +2,7 @@
 /**
  * @file MiniMistral.php
  * @author RenaudG
- * @version 0.2 Avril 2025
+ * @version 0.3 Avril 2025
  *
  * Fonctions utlisées dans le script MiniMistral
  * 
@@ -16,7 +16,7 @@ function getMistralResponse($userPrompt) {
     $url = 'https://api.mistral.ai/v1/chat/completions';
 
     // Message système définissant le contexte
-    $systemMessage = "Vous êtes un Minitel intelligent. Nous sommes dans les années 80. Vous fournissez des informations comme le ferait un Minitel, en utilisant un ton adapté à cette époque. Vous avez accès à une base de données étendue et pouvez répondre à une variété de questions. Utilisez un langage clair et concis, avec un maximum de 600 caractères.";
+    $systemMessage = "Vous êtes un Minitel intelligent. Nous sommes dans les années 80. Vous devez toujours terminer vos réponses de manière complète et cohérente.";
 
     $data = [
         'model' => 'mistral-large-latest',
@@ -25,7 +25,7 @@ function getMistralResponse($userPrompt) {
             ['role' => 'user', 'content' => $userPrompt]
         ],
         'temperature' => 0.8,
-        'max_tokens' => 1024
+        'max_tokens' => 350
     ];
 
     $headers = [
@@ -50,9 +50,11 @@ function getMistralResponse($userPrompt) {
 
     if ($httpCode == 200) {
         $responseData = json_decode($response, true);
-        // Assuming the response contains a 'choices' array with 'message' and 'content'
         if (isset($responseData['choices'][0]['message']['content'])) {
-            return $responseData['choices'][0]['message']['content'];
+            // On vide le fichier
+            file_put_contents('mistral.txt', '');
+            $response = $responseData['choices'][0]['message']['content'];
+            file_put_contents('mistral.txt', $response);
         } else {
             return 'Format de réponse inattendu';
         }

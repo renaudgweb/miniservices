@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.5 Avril 2025
+ * @version 1.0 Avril 2025
  *
  * Script via API Coingecko
  * 
@@ -64,16 +64,13 @@ try {
             }
 
             // Affichage du prix du Bitcoin
-            $vdt .= MiniPavi\MiniPaviCli::writeCentered(11, $bitcoinPrice, VDT_TXTYELLOW);
+            $vdt .= MiniPavi\MiniPaviCli::writeCentered(11, $bitcoinPrice, VDT_TXTYELLOW . VDT_FDINV);
             $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, "Prix du Bitcoin mis à jour le", VDT_TXTWHITE);
             $vdt .= MiniPavi\MiniPaviCli::writeCentered(15, $formatter->format(new DateTime()));
             $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour plus d'informations.");
 
             // Vérification des touches
-            if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
-                $context['step'] = 'accueil';
-            }
-            if (MiniPavi\MiniPaviCli::$fctn == 'RETOUR') {
+            if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE' || MiniPavi\MiniPaviCli::$fctn == 'RETOUR') {
                 $context['step'] = 'accueil';
             }
             if (MiniPavi\MiniPaviCli::$fctn == 'REPETITION') {
@@ -88,18 +85,18 @@ try {
             // Affichage des prix des cryptomonnaies
             $vdt = MiniPavi\MiniPaviCli::clearScreen();
 
-            $counter = 3; // Initialisez le compteur
+            $counter = 4; // Initialisez le compteur
             foreach ($cryptoPrices as $crypto) {
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, $counter,) . $crypto['titre'] . ": " . $crypto['desc'];
+                $vdt .= MiniPavi\MiniPaviCli::setPos(4, $counter,) . $crypto['titre'] . ": " . $crypto['desc'];
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 1, "------------------------------");
                 $counter += 2;
             }
 
-            $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 5, "SOMMAIRE pour revenir à l'accueil.");
+            $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 4, "SOMMAIRE pour revenir à l'accueil.");
             $vdt .= MiniPavi\MiniPaviCli::writeLine0($formatter->format(new DateTime()));
 
             // Vérification des touches
-            if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
+            if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE' || MiniPavi\MiniPaviCli::$fctn == 'SUITE') {
                 $context['step'] = 'accueil';
             }
             if (MiniPavi\MiniPaviCli::$fctn == 'RETOUR') {
@@ -107,9 +104,6 @@ try {
             }
             if (MiniPavi\MiniPaviCli::$fctn == 'REPETITION') {
                 $context['step'] = 'affichage_prix';
-            }
-            if (MiniPavi\MiniPaviCli::$fctn == 'SUITE') {
-                $context['step'] = 'accueil';
             }
             break;
     }

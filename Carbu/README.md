@@ -1,7 +1,7 @@
 # 🛢️ 3613 CARBU
 
 <p align="center">
-  <img src="Carbu.png" alt="Carbu logo" width="600"/>
+  <img src="Carbu.jpg" alt="Carbu logo" width="600"/>
 </p>
 
 **3613 CARBU** est une application dédiée à la gestion et à l'affichage des informations sur les carburants. Elle permet aux utilisateurs de consulter les prix des carburants en temps réel et de recevoir des mises à jour régulières directement sur leur Minitel. Grâce à la passerelle MiniPavi, cette application offre une expérience Minitel moderne et interactive.
