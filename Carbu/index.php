@@ -77,7 +77,7 @@ try {
                 $vdtPreTitle = '';
 
                 // Position du titre
-                $lTitle = 2;
+                $lTitle = 3;
                 $cTitle = 2;
                 // Position du compteur de page
                 $lCounter = 24;
@@ -87,7 +87,7 @@ try {
                 $vdtPreCounter = VDT_TXTWHITE;
 
                 // Position début du texte
-                $lText = 3;
+                $lText = 4;
                 $cText = 2;
 
                 // Longueur maximum d'une ligne
