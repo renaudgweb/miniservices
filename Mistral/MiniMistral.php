@@ -62,5 +62,4 @@ function getMistralResponse($userPrompt) {
         return 'Erreur HTTP: ' . $httpCode;
     }
 }
-
 ?>

@@ -24,6 +24,8 @@ try {
         $context = array('step' => 'accueil');
     } else {
         $context = unserialize(MiniPavi\MiniPaviCli::$context);
+        $fctn = MiniPavi\MiniPaviCli::$fctn;
+        $content = MiniPavi\MiniPaviCli::$content;
     }
 
     // Initialisation des variables
@@ -56,7 +58,7 @@ try {
                 break;
             }
             // Récupération de la question de l'utilisateur
-            $userPrompt = MiniPavi\MiniPaviCli::$content[0];
+            $userPrompt = $content[0];
             // Appel à l'API Mistral AI
             getMistralResponse($userPrompt);
             $textFilename = 'mistral.txt';

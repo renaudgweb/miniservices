@@ -24,10 +24,11 @@ try {
         $context = array('step' => 'accueil');
     } else {
         $context = unserialize(MiniPavi\MiniPaviCli::$context);
+        $fctn = MiniPavi\MiniPaviCli::$fctn;
+        $content = MiniPavi\MiniPaviCli::$content;
     }
 
     // Initialisation des variables
-    $fctn = MiniPavi\MiniPaviCli::$fctn;
     $vdt = ''; // Le contenu vidéotex à envoyer au Minitel de l'utilisateur
     $cmd = null; // La commande à exécuter au niveau de MiniPavi
     $directCall = false; // Ne pas rappeler le script immédiatement
@@ -54,7 +55,7 @@ try {
                 break;
             }
             // Récupération de la question de l'utilisateur
-            $location = MiniPavi\MiniPaviCli::$content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
+            $location = $content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
             list($latitude, $longitude) = getCoordinatesFromOpenMeteo($location);
             $nearbyStations = getNearbyStations($latitude, $longitude);
             $textFilename = 'stations.txt'; // Nom du fichier où les informations seront écrites
