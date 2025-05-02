@@ -64,9 +64,9 @@ try {
             }
 
             // Affichage du prix du Bitcoin
-            $vdt .= MiniPavi\MiniPaviCli::writeCentered(11, $bitcoinPrice, VDT_TXTYELLOW . VDT_FDINV);
-            $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, "Prix du Bitcoin mis à jour le", VDT_TXTWHITE);
-            $vdt .= MiniPavi\MiniPaviCli::writeCentered(15, $formatter->format(new DateTime()));
+            $vdt .= MiniPavi\MiniPaviCli::writeCentered(12, $bitcoinPrice, VDT_TXTYELLOW . VDT_SZDBLH . VDT_FDINV);
+            $vdt .= MiniPavi\MiniPaviCli::writeCentered(15, "Prix du Bitcoin mis à jour le", VDT_TXTWHITE);
+            $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $formatter->format(new DateTime()));
             $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour plus d'informations.");
 
             // Vérification des touches
