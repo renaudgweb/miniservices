@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.0 Mai 2025
+ * @version 1.1 Mai 2025
  *
  * Script via API Coingecko
  * 
@@ -49,11 +49,11 @@ try {
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "S'initier n'est pas un délit.", VDT_TXTWHITE);
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour le cours du Bitcoin.", VDT_BLINK);
 
-                $context['step'] = 'accueil-traitement-saisie';
+                $context['step'] = 'accueil-saisie';
                 $directCall = false;
                 break 2;
 
-            case 'accueil-traitement-saisie':
+            case 'accueil-saisie':
                 if ($fctn == 'SUITE') {
                     $context['step'] = 'bitcoin';
                     break;
@@ -62,7 +62,7 @@ try {
                     $context['step'] = 'accueil';
                     break;
                 }
-                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur Suite !');
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur SUITE !');
                 $directCall = false;
                 break 2;
 
@@ -85,24 +85,24 @@ try {
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $formatter->format(new DateTime()));
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour plus de cours.");
 
-                $context['step'] = 'menu-suite';
+                $context['step'] = 'bitcoin-suite';
                 $directCall = false;
                 break 2;
 
-            case 'menu-suite':
+            case 'bitcoin-suite':
                 if ($fctn == 'SUITE') {
-                    $context['step'] = 'affichage_prix';
+                    $context['step'] = 'affichage-prix';
                     break;
                 }
                 if ($fctn == 'SOMMAIRE') {
                     $context['step'] = 'accueil';
                     break;
                 }
-                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur Suite !');
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur SUITE !');
                 $directCall = false;
                 break 2;
 
-            case 'affichage_prix':
+            case 'affichage-prix':
                 // Affichage des prix des cryptomonnaies
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
 
@@ -115,7 +115,7 @@ try {
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 4, "SOMMAIRE pour revenir à l'accueil.");
                 $vdt .= MiniPavi\MiniPaviCli::writeLine0($formatter->format(new DateTime()));
 
-                $context['step'] = 'accueil-traitement-saisie';
+                $context['step'] = 'accueil-saisie';
                 $directCall = false;
                 break 2;
         }
