@@ -2,7 +2,7 @@
 /**
  * @file MiniCrypto.php
  * @author RenaudG
- * @version 1.0 Avril 2025
+ * @version 1.1 Avril 2025
  *
  * Fonctions utlisées dans le script MiniCrypto
  * 
@@ -14,19 +14,34 @@ function getPrices() {
     global $URL;
     $tRes = array();
 
-    // Récupérer les données JSON depuis l'URL
-    $jsonData = file_get_contents($URL);
+    // Initialiser cURL
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $URL);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, false);
 
-    if ($jsonData === FALSE) {
-        // Si la récupération des données échoue, retourner un tableau vide
+    // Exécuter la requête
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    // Si on reçoit une erreur 429, attendre 1 minute et réessayer une fois
+    if ($httpCode === 429) {
+        sleep(60);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    }
+
+    curl_close($ch);
+
+    if ($httpCode !== 200 || $response === false) {
+        // Si la récupération échoue ou n'est pas OK, retourner tableau vide
         return $tRes;
     }
 
     // Décoder le JSON
-    $data = json_decode($jsonData, true);
+    $data = json_decode($response, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-        // Si le JSON est invalide, retourner un tableau vide
         return $tRes;
     }
 
