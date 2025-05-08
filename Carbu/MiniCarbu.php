@@ -2,7 +2,7 @@
 /**
  * @file MiniCarbu.php
  * @author RenaudG
- * @version 0.3 Avril 2025
+ * @version 0.4 Avril 2025
  *
  * Fonctions utilisées dans le script MiniCarbu
  *
