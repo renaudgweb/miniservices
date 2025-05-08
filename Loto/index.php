@@ -49,15 +49,14 @@ try {
                 $vdt .= file_get_contents('Loto.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "      SUITE pour l'Euromillions.        ", VDT_BGBLACK . VDT_TXTWHITE);
 
-                $resultats = getLotoResults();
+                $resultats = getLotoResultat();
                 if ($resultats) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(15, $resultats['date'], VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, implode(", ", $resultats['numeros']) . $resultats['chance'], VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, $resultats['chance'], VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(18, ($resultats['joker'] ?? 'Non disponible'), VDT_BGWHITE . VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, $resultats['date'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $resultats['jackpot'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(19, VDT_BGBLUE . implode(" - ", $resultats['numeros']) . " * " . $resultats['chance'], VDT_BGBLUE . VDT_TXTWHITE . VDT_SZDBLH);
                 } else {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Impossible de récupérer les", VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, "résultats du Loto.", VDT_BGWHITE . VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Impossible de récupérer les", VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, "résultats du Loto.", VDT_TXTBLUE);
                 }
 
                 $context['step'] = 'menu-suite';
@@ -83,14 +82,14 @@ try {
                 $vdt .= file_get_contents('Loto.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "          SUITE pour le Loto.           ", VDT_BGBLACK . VDT_TXTWHITE);
 
-                $resultats = getEuromillionsResults();
+                $resultats = getEuromillionsResultat();
                 if ($resultats) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $resultats['date'], VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, implode(", ", $resultats['numeros']) . $resultats['etoiles'], VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(18, ($resultats['my_million'] ?? 'Non disponible'), VDT_BGWHITE . VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, $resultats['date'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $resultats['jackpot'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(19, VDT_BGBLUE . implode(" - ", $resultats['numeros']) . " * " . implode(" - ", $resultats['chances']), VDT_BGBLUE . VDT_TXTWHITE . VDT_SZDBLH);
                 } else {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Impossible de récupérer les", VDT_BGWHITE . VDT_TXTBLUE);
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, "résultats de l'Euromillions.", VDT_BGWHITE . VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Impossible de récupérer les", VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(17, "résultats de l'Euromillions.", VDT_TXTBLUE);
                 }
 
                 $context['step'] = 'accueil-traitement-saisie';

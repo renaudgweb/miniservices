@@ -1,87 +1,84 @@
 <?php
-/*$resultats = getLotoResults();
+function getLotoResultat() {
+    $url = 'https://tirage-gagnant.com/loto/resultats-loto/';
+    
+    // Charger le HTML de la page
+    $html = file_get_contents($url);
+    if (!$html) return null;
 
-if ($resultats) {
-    echo "Tirage du " . $resultats['date'] . "\n";
-    echo "Numéros : " . implode(", ", $resultats['numeros']) . "\n";
-    echo "Numéro Chance : " . $resultats['chance'] . "\n";
-    echo "Joker+ : " . ($resultats['joker'] ?? 'Non disponible') . "\n";
-} else {
-    echo "Erreur : impossible de récupérer les résultats du Loto.\n";
-}*/
-function getLotoResults(): ?array {
-    $url = "https://www.fdj.fr/jeux/jeux-de-tirage/loto/resultats";
-    $html = @file_get_contents($url);
+    // Initialiser DOM
+    libxml_use_internal_errors(true); // Ignorer les warnings HTML mal formé
+    $dom = new DOMDocument();
+    $dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
 
-    if (!$html) {
-        return null;
+    // Extraire la date (format complet)
+    $dateNode = $xpath->query('//div[@id="resultat_date"]//span[@class="date_full"]')->item(0);
+    $date = $dateNode ? trim($dateNode->textContent) : null;
+
+    // Extraire le jackpot
+    $jackpotNode = $xpath->query('//div[@id="resultat_date"]//p[@class="jackpot"]')->item(0);
+    $jackpot = $jackpotNode ? trim($jackpotNode->textContent) : null;
+
+    // Extraire les numéros
+    $numNodes = $xpath->query('//div[@id="resultat_date"]//div[@class="resultat"]/p[@class="num"]');
+    $numeros = [];
+    foreach ($numNodes as $node) {
+        $numeros[] = trim($node->textContent);
     }
 
-    // Expressions régulières pour extraire les données
-    $getDate   = '#<h3 class="dateTirage[^"]*">(.+?)<\/h3>#si';
-    $getNumbers = '#<p class="loto_boule">(.+?)<\/p>#si';
-    $getChance  = '#<p class="loto_boule_c">(.+?)<\/p>#si';
-    $getJoker   = '#<p class="tirage_joker_plus"[^>]*>(.+?)<\/p>#si';
-
-    // Extraire les données
-    preg_match_all($getDate, $html, $date);
-    preg_match_all($getNumbers, $html, $numbers);
-    preg_match_all($getChance, $html, $chance);
-    preg_match_all($getJoker, $html, $joker);
-
-    // Validation basique
-    if (empty($date[1]) || count($numbers[1]) < 5 || empty($chance[1])) {
-        return null;
-    }
+    // Extraire le numéro chance
+    $chanceNode = $xpath->query('//div[@id="resultat_date"]//div[@class="resultat"]/p[@class="chance"]')->item(0);
+    $chance = $chanceNode ? trim($chanceNode->textContent) : null;
 
     return [
-        'date'    => trim($date[1][0]),
-        'numeros' => array_map('trim', array_slice($numbers[1], 0, 5)),
-        'chance'  => trim($chance[1][0]),
-        'joker'   => !empty($joker[1]) ? trim(strip_tags($joker[1][0])) : null
+        'date' => $date,
+        'jackpot' => $jackpot,
+        'numeros' => $numeros,
+        'chance' => $chance
     ];
 }
 
+function getEuromillionsResultat() {
+    $url = 'https://tirage-gagnant.com/euromillions/resultats-euromillions/';
+    
+    // Charger le HTML de la page
+    $html = file_get_contents($url);
+    if (!$html) return null;
 
-/*$resultats = getEuromillionsResults();
+    // Initialiser DOM
+    libxml_use_internal_errors(true); // Ignorer les warnings HTML mal formé
+    $dom = new DOMDocument();
+    $dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
 
-if ($resultats) {
-    echo "Tirage du " . $resultats['date'] . "\n";
-    echo "Numéros : " . implode(", ", $resultats['numeros']) . "\n";
-    echo "Étoiles : " . implode(", ", $resultats['etoiles']) . "\n";
-    echo "My Million : " . ($resultats['my_million'] ?? 'Non disponible') . "\n";
-} else {
-    echo "Erreur : Impossible de récupérer les résultats.\n";
-}*/
-function getEuromillionsResults(): ?array {
-    $url = "https://www.fdj.fr/jeux/jeux-de-tirage/euromillions/resultats";
-    $html = @file_get_contents($url);
+    // Extraire la date (format complet)
+    $dateNode = $xpath->query('//div[@id="resultat_date"]//span[@class="date_full"]')->item(0);
+    $date = $dateNode ? trim($dateNode->textContent) : null;
 
-    if (!$html) {
-        return null;
+    // Extraire le jackpot
+    $jackpotNode = $xpath->query('//div[@id="resultat_date"]//p[@class="jackpot"]')->item(0);
+    $jackpot = $jackpotNode ? trim($jackpotNode->textContent) : null;
+
+    // Extraire les numéros
+    $numNodes = $xpath->query('//div[@id="resultat_date"]//div[@class="resultat"]/p[@class="num_v2"]');
+    $numeros = [];
+    foreach ($numNodes as $node) {
+        $numeros[] = trim($node->textContent);
     }
 
-    // Regex patterns
-    $getDate      = '#<h3 class="dateTirage[^"]*">(.+?)<\/h3>#si';
-    $getNumbers   = '#<p class="euro_num">(.+?)<\/p>#si';
-    $getChance    = '#<p class="euro_num_c">(.+?)<\/p>#si';
-    $getMyMillion = '#<p class="tirage_my_million"><span>(.+?)<\/span><\/p>#si';
-
-    // Match with regex
-    preg_match_all($getDate, $html, $date);
-    preg_match_all($getNumbers, $html, $numbers);
-    preg_match_all($getChance, $html, $chances);
-    preg_match_all($getMyMillion, $html, $myMillion);
-
-    if (empty($date[1]) || count($numbers[1]) < 5 || count($chances[1]) < 2) {
-        return null; // données manquantes
+    // Extraire le numéro chance
+    $chanceNodes = $xpath->query('//div[@id="resultat_date"]//div[@class="resultat"]/p[@class="etoile_v2"]');
+    $chances = [];
+    foreach ($chanceNodes as $node) {
+        $chances[] = trim($node->textContent);
     }
 
     return [
-        'date'       => trim($date[1][0]),
-        'numeros'    => array_map('trim', array_slice($numbers[1], 0, 5)),
-        'etoiles'    => array_map('trim', array_slice($chances[1], 0, 2)),
-        'my_million' => !empty($myMillion[1]) ? trim($myMillion[1][0]) : null
+        'date' => $date,
+        'jackpot' => $jackpot,
+        'numeros' => $numeros,
+        'chances' => $chances
     ];
 }
 ?>
