@@ -1,4 +1,12 @@
 <?php
+/**
+ * @file MiniLoto.php
+ * @author RenaudG
+ * @version 1.0 Mai 2025
+ *
+ * 
+ */
+
 function getLotoResultat() {
     $url = 'https://tirage-gagnant.com/loto/resultats-loto/';
     

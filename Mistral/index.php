@@ -13,7 +13,7 @@ require "../DisplayPaginatedText.php";
 require "MiniMistral.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR);
+error_reporting(E_ERROR|E_WARNING);
 ini_set('display_errors',0);
 
 try {
@@ -78,7 +78,8 @@ try {
                     $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
                     $vdtStart .= file_get_contents('LeChat.vdt');
 
-                    $vdtClearPage = "";
+                    $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 24);
+                    $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     for ($i = 0; $i < 19; $i++) {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 24 - $i);
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);

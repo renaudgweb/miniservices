@@ -1,7 +1,18 @@
 <?php
+/**
+ * @file index.php
+ * @author RenaudG
+ * @version 1.0 Mai 2025
+ *
+ * 
+ */
 
 require "../MiniPaviCli.php";
 require "MiniLoto.php";
+
+//error_reporting(E_USER_NOTICE|E_USER_WARNING);
+error_reporting(E_ERROR|E_WARNING);
+ini_set('display_errors',0);
 
 try {
     MiniPavi\MiniPaviCli::start();

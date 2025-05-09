@@ -12,7 +12,7 @@ require "../MiniPaviCli.php";
 require "MiniCrypto.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR);
+error_reporting(E_ERROR|E_WARNING);
 ini_set('display_errors',0);
 
 try {
