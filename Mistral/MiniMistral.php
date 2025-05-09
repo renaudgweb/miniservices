@@ -25,7 +25,7 @@ function getMistralResponse($userPrompt) {
             ['role' => 'user', 'content' => $userPrompt]
         ],
         'temperature' => 0.8,
-        'max_tokens' => 350
+        'max_tokens' => 512
     ];
 
     $headers = [
