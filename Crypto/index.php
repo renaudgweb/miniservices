@@ -12,7 +12,7 @@ require "../MiniPaviCli.php";
 require "MiniCrypto.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR|E_WARNING);
+error_reporting(E_ERROR);
 ini_set('display_errors',0);
 
 try {
@@ -47,7 +47,11 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
                 $vdt .= file_get_contents('3615CryptoMoney.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "S'initier n'est pas un délit.", VDT_TXTWHITE);
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour le cours du Bitcoin.", VDT_BLINK);
+                //$vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour le cours du Bitcoin.", VDT_BLINK);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(4, 24);
+                $vdt .= VDT_BGCYAN . VDT_TXTWHITE . VDT_BLINK . " SUITE ";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(11, 24);
+                $vdt .= VDT_BGBLACK . VDT_TXTWHITE . " pour le cours du Bitcoin.";
 
                 $context['step'] = 'accueil-saisie';
                 $directCall = false;
@@ -83,7 +87,7 @@ try {
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(12, $bitcoinPrice, VDT_TXTYELLOW . VDT_SZDBLH . VDT_FDINV);
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(15, "Prix du Bitcoin mis à jour le", VDT_TXTWHITE);
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $formatter->format(new DateTime()));
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour plus de cours.");
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTYELLOW . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
 
                 $context['step'] = 'bitcoin-suite';
                 $directCall = false;
@@ -112,7 +116,7 @@ try {
                     $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 1, "------------------------------");
                     $counter += 2;
                 }
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered($counter + 4, "SOMMAIRE pour revenir à l'accueil.");
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
                 $vdt .= MiniPavi\MiniPaviCli::writeLine0($formatter->format(new DateTime()));
 
                 $context['step'] = 'accueil-saisie';

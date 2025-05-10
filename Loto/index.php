@@ -33,9 +33,13 @@ try {
             case 'accueil':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
                 $vdt .= file_get_contents('Loto.vdt');
-                $vdt .= MiniPavi\MiniPaviCli::setPos(5, 18);
-                $vdt .= VDT_BGWHITE. VDT_TXTBLACK . VDT_SZDBLHW . date('d/m/Y H:i');
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "   SUITE pour afficher les resultats.   ", VDT_BGBLACK . VDT_TXTWHITE . VDT_BLINK);
+                $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, "LOTO NATIONAL : facile, pas cher....", VDT_BGWHITE. VDT_TXTRED);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(5, 19);
+                $vdt .= VDT_TXTBLUE . VDT_SZDBLHW . date('d/m/Y H:i');
+                $vdt .= MiniPavi\MiniPaviCli::setPos(3, 24);
+                $vdt .= VDT_BGRED . VDT_TXTWHITE . VDT_BLINK . " SUITE ";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(10, 24);
+                $vdt .= VDT_BGBLUE . VDT_TXTWHITE . " pour afficher les resultats.";
                 $context['step'] = 'accueil-traitement-saisie';
                 $directCall = false;
                 break 2;
@@ -56,7 +60,7 @@ try {
             case 'menu-loto':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
                 $vdt .= file_get_contents('Loto.vdt');
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "      SUITE pour l'Euromillions.        ", VDT_BGBLACK . VDT_TXTWHITE);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
 
                 $resultats = getLotoResultat();
                 if ($resultats) {
@@ -88,7 +92,7 @@ try {
             case 'menu-euro':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
                 $vdt .= file_get_contents('Loto.vdt');
-                $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "          SUITE pour le Loto.           ", VDT_BGBLACK . VDT_TXTWHITE);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
 
                 $resultats = getEuromillionsResultat();
                 if ($resultats) {
