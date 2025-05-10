@@ -32,7 +32,6 @@ try {
         switch ($context['step']) {
             case 'accueil':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
-                $vdt .= file_get_contents('Blanc.vdt');
                 $vdt .= file_get_contents('Loto.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::setPos(5, 18);
                 $vdt .= VDT_BGWHITE. VDT_TXTBLACK . VDT_SZDBLHW . date('d/m/Y H:i');
@@ -56,13 +55,12 @@ try {
 
             case 'menu-loto':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= file_get_contents('Blanc.vdt');
                 $vdt .= file_get_contents('Loto.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "      SUITE pour l'Euromillions.        ", VDT_BGBLACK . VDT_TXTWHITE);
 
                 $resultats = getLotoResultat();
                 if ($resultats) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, $resultats['date'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, "Loto du " . $resultats['date'], VDT_TXTBLUE);
                     $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $resultats['jackpot'], VDT_TXTBLUE);
                     $vdt .= MiniPavi\MiniPaviCli::writeCentered(19, VDT_BGBLUE . implode(" - ", $resultats['numeros']) . " * " . $resultats['chance'], VDT_BGBLUE . VDT_TXTWHITE . VDT_SZDBLH);
                 } else {
@@ -89,13 +87,12 @@ try {
 
             case 'menu-euro':
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= file_get_contents('Blanc.vdt');
                 $vdt .= file_get_contents('Loto.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "          SUITE pour le Loto.           ", VDT_BGBLACK . VDT_TXTWHITE);
 
                 $resultats = getEuromillionsResultat();
                 if ($resultats) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, $resultats['date'], VDT_TXTBLUE);
+                    $vdt .= MiniPavi\MiniPaviCli::writeCentered(14, "Euromillions du " . $resultats['date'], VDT_TXTBLUE);
                     $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, $resultats['jackpot'], VDT_TXTBLUE);
                     $vdt .= MiniPavi\MiniPaviCli::writeCentered(19, VDT_BGBLUE . implode(" - ", $resultats['numeros']) . " * " . implode(" - ", $resultats['chances']), VDT_BGBLUE . VDT_TXTWHITE . VDT_SZDBLH);
                 } else {
