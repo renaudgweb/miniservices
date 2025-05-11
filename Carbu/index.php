@@ -61,7 +61,7 @@ try {
                 $coordinates = getCoordinatesFromOpenMeteo($location);
                 if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
                     $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune donnée de coordonnées trouvée !');
-                    sleep(2);
+                    sleep(4);
                     $context['step'] = 'accueil';
                     break;
                 }

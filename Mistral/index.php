@@ -57,10 +57,10 @@ try {
             case 'accueil-init-saisie':
                 $vdt = MiniPavi\MiniPaviCli::writeLine0('...', true);
                 // Récupération de la question de l'utilisateur
-                $userPrompt = implode("", $content);
+                $userPrompt = implode(" ", $content);
                 if (empty($userPrompt)) {
                     $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune demande !');
-                    sleep(2);
+                    sleep(4);
                     $context['step'] = 'accueil';
                     break;
                 }
