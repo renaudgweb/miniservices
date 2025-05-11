@@ -59,8 +59,6 @@ try {
                 // Récupération de la question de l'utilisateur
                 $userPrompt = implode(" ", $content);
                 if (empty($userPrompt)) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune demande !');
-                    sleep(4);
                     $context['step'] = 'accueil';
                     break;
                 }
@@ -76,15 +74,13 @@ try {
                     $context['reponse'] = '';
                     break;
                 }
-                $textFilename = 'mistral.txt';
-
                 // Affichage de la réponse
                 $objDisplayPaginatedText = @$context['reponse'];
-                if (!($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
-                    // L'utilisateur n'a pas encore l'objet, création
-                    $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
-                    $vdtStart .= file_get_contents('LeChat.vdt');
+                if (! ($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
 
+                    // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
+                    $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
+                    // Effacement du texte affiché
                     $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 24);
                     $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     for ($i = 0; $i < 19; $i++) {
@@ -92,33 +88,69 @@ try {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
 
-                    $objDisplayPaginatedText = new DisplayPaginatedText(
-                        $vdtStart,
-                        $vdtClearPage,
-                        $textFilename,
-                        7, 2, '',            // titre : ligne 7, colonne 2, pas de préfixe
-                        24, 36, VDT_TXTYELLOW, // compteur de page ligne 24 col 36 en jaune
-                        8, 2, 38,            // texte ligne 8 col 2, 38 caractères max
-                        VDT_TXTWHITE,        // couleur normale
-                        VDT_TXTYELLOW,       // couleur spéciale (#)
-                        '',                  // rien avant chaque ligne
-                        MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Sommaire ",
-                        MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
-                        MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
-                        MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
-                        MiniPavi\MiniPaviCli::toG2("Première page !"),
-                        MiniPavi\MiniPaviCli::toG2("Dernière page !"),
-                        15                  // 15 lignes par page
-                    );
+                    $textFilename = 'mistral.txt';
+
+                    // titre Cyan, double hauteur
+                    $vdtPreTitle = '';
+
+                    // Position du titre
+                    $lTitle = 7;
+                    $cTitle = 2;
+                    // Position du compteur de page
+                    $lCounter = 24;
+                    $cCounter = 36;
+
+                    // Compteur de page couleur Cyan
+                    $vdtPreCounter = VDT_TXTYELLOW;
+
+                    // Position début du texte
+                    $lText = 8;
+                    $cText = 2;
+
+                    // Longueur maximum d'une ligne
+                    $maxLengthText = 38;
+
+                    // Couleur normale : blanc
+                    $normalColor = VDT_TXTWHITE;
+
+                    // Couleur spéciale : jaune
+                    $specialColor = VDT_TXTYELLOW;
+
+                    // Rien de particulier à afficher avant chaque ligne
+                    $vdtPreText = '';
+
+                    // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas géré par l'objet, mais directement par le script)
+                    $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTWHITE . VDT_FDINV . " Sommaire ";
+
+                    // Bas de page si uniquement Suite accepté
+                    $vdtSuite = MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+                    // Bas de page si uniquement Retour accepté
+                    $vdtRetour = MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTWHITE . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+                    // Bas de page si Suite et Retour acceptés
+                    $vdtSuiteRetour = MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+                    // Message d'erreur si première page atteinte et appui sur Retour
+                    $vdtErrNoPrev = MiniPavi\MiniPaviCli::toG2("Première page !");
+
+                    // Message d'erreur si dernière page atteinte et appui sur Suite
+                    $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
+
+                    // 15 lignes maximum par page
+                    $lines = 15;
+
+                    // Initialisation
+                    $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);
+                    // Exécution
+                    $r = $objDisplayPaginatedText->process('', $vdt);
+                } else {
+                    // L'utilisateur a déjà l'objet dans son contexte, exécution
+                    $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
                 }
-
-                // Exécution
-                $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
-
-                // Sauvegarde dans le contexte
+                // Conserver l'objet dans le contexte utilisateur pour le récupérer lors de sa prochaine action
                 $context['reponse'] = $objDisplayPaginatedText;
                 break 2;
-
         }
     }
     if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {

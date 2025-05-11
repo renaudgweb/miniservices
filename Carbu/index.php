@@ -60,8 +60,6 @@ try {
                 $location = $content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
                 $coordinates = getCoordinatesFromOpenMeteo($location);
                 if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
-                    $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune donnée de coordonnées trouvée !');
-                    sleep(4);
                     $context['step'] = 'accueil';
                     break;
                 }
@@ -115,10 +113,10 @@ try {
                     // Longueur maximum d'une ligne
                     $maxLengthText = 38;
 
-                    // Couleur normale : jaune
+                    // Couleur normale : blanc
                     $normalColor = VDT_TXTWHITE;
 
-                    // Couleur spéciale : blanc
+                    // Couleur spéciale : jaune
                     $specialColor = VDT_TXTYELLOW;
 
                     // Rien de particulier à afficher avant chaque ligne
