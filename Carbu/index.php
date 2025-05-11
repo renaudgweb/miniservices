@@ -58,10 +58,16 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::writeLine0('Recherche en cours ...', true);
                 // Récupération de la question de l'utilisateur
                 $location = $content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
-                list($latitude, $longitude) = getCoordinatesFromOpenMeteo($location);
+                $coordinates = getCoordinatesFromOpenMeteo($location);
+                if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
+                    $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune donnée de coordonnées trouvée !');
+                    sleep(2);
+                    $context['step'] = 'accueil';
+                    break;
+                }
+                list($latitude, $longitude) = $coordinates;
                 $nearbyStations = getNearbyStations($latitude, $longitude);
-                $textFilename = 'stations.txt'; // Nom du fichier où les informations seront écrites
-                displayFuelPrices($nearbyStations, $textFilename);
+                displayFuelPrices($nearbyStations, 'stations.txt');
 
                 $context['step'] = 'reponse';
                 $directCall = true;
@@ -70,10 +76,9 @@ try {
             case 'reponse':
                 if ($fctn == 'SOMMAIRE' || $fctn == 'GUIDE') {
                     $context['step'] = 'accueil';
+                    $context['reponse'] = '';
                     break;
                 }
-                $textFilename = 'stations.txt';
-
                 // Affichage de la réponse
                 $objDisplayPaginatedText = @$context['reponse'];
                 if (! ($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
@@ -87,6 +92,9 @@ try {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 24 - $i);
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
+
+                    $textFilename = 'stations.txt';
+
                     // titre Cyan, double hauteur
                     $vdtPreTitle = '';
 

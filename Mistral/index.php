@@ -13,7 +13,7 @@ require "../DisplayPaginatedText.php";
 require "MiniMistral.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
-error_reporting(E_ERROR|E_WARNING);
+error_reporting(E_ERROR);
 ini_set('display_errors',0);
 
 try {
@@ -57,7 +57,13 @@ try {
             case 'accueil-init-saisie':
                 $vdt = MiniPavi\MiniPaviCli::writeLine0('...', true);
                 // Récupération de la question de l'utilisateur
-                $userPrompt = implode(" ", $content);
+                $userPrompt = implode("", $content);
+                if (empty($userPrompt)) {
+                    $vdt .= MiniPavi\MiniPaviCli::writeLine0('Aucune demande !');
+                    sleep(2);
+                    $context['step'] = 'accueil';
+                    break;
+                }
                 // Appel à l'API Mistral AI
                 getMistralResponse($userPrompt);
                 $context['step'] = 'reponse';
@@ -67,6 +73,7 @@ try {
             case 'reponse':
                 if ($fctn == 'SOMMAIRE' || $fctn == 'GUIDE') {
                     $context['step'] = 'accueil';
+                    $context['reponse'] = '';
                     break;
                 }
                 $textFilename = 'mistral.txt';

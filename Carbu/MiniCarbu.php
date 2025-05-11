@@ -148,7 +148,7 @@ function displayFuelPrices($stations, $filename) {
             echo "No fuel prices available.\n";
         }
 
-        $content .= "\n";
+        $content .= "\n--------------------------------------\n\n";
 
         writeToFile($filename, $content);
     }
