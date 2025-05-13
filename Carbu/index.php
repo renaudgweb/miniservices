@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 0.4 Avril 2025
+ * @version 1.0 Avril 2025
  *
  * Script via API data.economie.gouv.fr
  * 
@@ -58,6 +58,8 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::writeLine0('Recherche en cours ...', true);
                 // Récupération de la question de l'utilisateur
                 $location = $content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
+                $location = rtrim($location); // enlever un espace à la fin de la chaîne
+                $location = str_replace(' ', '-', $location); // remplacer un espace par un tiret
                 $coordinates = getCoordinatesFromOpenMeteo($location);
                 if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
                     $context['step'] = 'accueil';
