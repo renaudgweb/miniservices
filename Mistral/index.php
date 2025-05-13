@@ -56,6 +56,10 @@ try {
 
             case 'accueil-init-saisie':
                 $vdt = MiniPavi\MiniPaviCli::writeLine0('...', true);
+                if (empty($content[0]) || !isset($content[0])) {
+                    $context['step'] = 'accueil';
+                    break;
+                }
                 // Récupération de la question de l'utilisateur
                 $userPrompt = implode(" ", $content);
                 // Appel à l'API Mistral AI
