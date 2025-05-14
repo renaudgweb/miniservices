@@ -33,6 +33,15 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient trois 
   - Mises à jour en temps réel.
   - Navigation fluide entre les différentes cryptomonnaies.
 
+## 🎰 3615 LOTO
+
+**3615 LOTO** est une application qui permet aux utilisateurs de consulter les résultats des derniers tirages du Loto ainsi que de l'Euromillions. Grâce à MiniPavi, les utilisateurs peuvent accéder facilement aux résultats des jeux de hasard directement depuis leur Minitel.
+
+- **Fonctionnalités** :
+  - Consultation des résultats du dernier tirage du Loto.
+  - Consultation des résultats du dernier tirage de l'Euromillions.
+  - Mises à jour en temps réel des résultats.
+
 ## 🚀 Utilisation de la Passerelle MiniPavi
 
 Ces applications utilisent la passerelle MiniPavi pour communiquer avec les services Minitel. MiniPavi permet de moderniser les services Minitel en utilisant des technologies web comme les websockets et HTTP.
@@ -66,6 +75,7 @@ Pour installer et configurer ces applications, suivez les instructions ci-dessou
 case 10:
     if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
         $step = 0; // Retour au sommaire
+        $context['reponse'] = '';
         break;
     }
     // Récupération de l'éventuel objet existant dans le contexte utilisateur
@@ -144,6 +154,7 @@ case 10:
 case 20:
     if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
         $step = 10; // Retour au sommaire
+        $context['reponse'] = '';
         break;
     }
 

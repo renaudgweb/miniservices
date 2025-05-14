@@ -42,6 +42,7 @@ try {
                 // Affichage de la demande de question
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
                 $vdt .= file_get_contents('Carbu.vdt');
+                $vdt .= MiniPavi\MiniPaviCli::writeLine0('data.gouv.fr');
                 $vdt .= MiniPavi\MiniPaviCli::setPos(2, 18);
                 $vdt .= VDT_TXTWHITE . VDT_FDINV . " Ville ou code postal : ";
                 $vdt .= MiniPavi\MiniPaviCli::setPos(31, 24);
