@@ -75,7 +75,7 @@ Pour installer et configurer ces applications, suivez les instructions ci-dessou
 case 10:
     if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
         $step = 0; // Retour au sommaire
-        $context['reponse'] = '';
+        $context['objDisplayPaginatedText'] = '';
         break;
     }
     // Récupération de l'éventuel objet existant dans le contexte utilisateur
@@ -154,7 +154,7 @@ case 10:
 case 20:
     if (MiniPavi\MiniPaviCli::$fctn == 'SOMMAIRE') {
         $step = 10; // Retour au sommaire
-        $context['reponse'] = '';
+        $context['objDisplayList'] = '';
         break;
     }
 
