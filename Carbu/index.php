@@ -143,7 +143,7 @@ try {
                     // Message d'erreur si dernière page atteinte et appui sur Suite
                     $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
 
-                    // 16 lignes maximum par page
+                    // Lignes maximum par page
                     $lines = 22;
 
                     // Initialisation

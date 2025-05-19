@@ -107,7 +107,7 @@ try {
                         MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
                         MiniPavi\MiniPaviCli::toG2("Première page !"),
                         MiniPavi\MiniPaviCli::toG2("Dernière page !"),
-                        15 // 15 lignes par page
+                        15 // Lignes par page
                     );
                 }
 
