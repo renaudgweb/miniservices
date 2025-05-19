@@ -2,7 +2,7 @@
 /**
  * @file MiniCarbu.php
  * @author RenaudG
- * @version 1.0 Avril 2025
+ * @version 1.0 Mai 2025
  *
  * Fonctions utilisées dans le script MiniCarbu
  *
@@ -148,9 +148,9 @@ function displayFuelPrices($stations, $filename) {
             echo "No fuel prices available.\n";
         }
 
-        $content .= "\n--------------------------------------\n\n";
+        $content .= "\n--------------------------------------\n";
 
-        writeToFile($filename, $content);
+        writeToFile($filename, "\n" . $content);
     }
 }
 ?>

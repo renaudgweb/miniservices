@@ -2,7 +2,7 @@
 /**
  * @file MiniCrypto.php
  * @author RenaudG
- * @version 1.1 Avril 2025
+ * @version 1.1 Mai 2025
  *
  * Fonctions utlisées dans le script MiniCrypto
  * 

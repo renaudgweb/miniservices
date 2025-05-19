@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.0 Avril 2025
+ * @version 1.0 Mai 2025
  *
  * Script via API MistralAI
  * 
@@ -62,6 +62,7 @@ try {
                 }
                 // Récupération de la question de l'utilisateur
                 $userPrompt = implode(" ", $content);
+                $userPrompt = rtrim($userPrompt);
                 // Appel à l'API Mistral AI
                 getMistralResponse($userPrompt);
                 $context['step'] = 'reponse';
@@ -85,7 +86,7 @@ try {
 
                     $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 24);
                     $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 39);
-                    for ($i = 0; $i < 19; $i++) {
+                    for ($i = 0; $i < 18; $i++) {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 24 - $i);
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
@@ -94,9 +95,9 @@ try {
                         $vdtStart,
                         $vdtClearPage,
                         $textFilename,
-                        7, 2, '',            // titre : ligne 7, colonne 2, pas de préfixe
+                        '', '', '',            // titre : ligne 7, colonne 2, pas de préfixe
                         24, 36, VDT_TXTYELLOW, // compteur de page ligne 24 col 36 en jaune
-                        8, 2, 38,            // texte ligne 8 col 2, 38 caractères max
+                        7, 2, 38,            // texte ligne 8 col 2, 38 caractères max
                         VDT_TXTWHITE,        // couleur normale
                         VDT_TXTYELLOW,       // couleur spéciale (#)
                         '',                  // rien avant chaque ligne

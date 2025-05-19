@@ -87,10 +87,10 @@ try {
                     // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
                     $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
                     // Effacement du texte affiché
-                    $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 23);
+                    $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 24);
                     $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     for ($i = 0; $i < 23; $i++) {
-                        $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 24 - $i);
+                        $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 23 - $i);
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
 
@@ -100,8 +100,8 @@ try {
                     $vdtPreTitle = '';
 
                     // Position du titre
-                    $lTitle = 3;
-                    $cTitle = 2;
+                    $lTitle = '';
+                    $cTitle = '';
                     // Position du compteur de page
                     $lCounter = 24;
                     $cCounter = 36;
@@ -110,7 +110,7 @@ try {
                     $vdtPreCounter = VDT_TXTWHITE;
 
                     // Position début du texte
-                    $lText = 4;
+                    $lText = 1;
                     $cText = 2;
 
                     // Longueur maximum d'une ligne
@@ -144,7 +144,7 @@ try {
                     $vdtErrNoNext = MiniPavi\MiniPaviCli::toG2("Dernière page !");
 
                     // 16 lignes maximum par page
-                    $lines = 16;
+                    $lines = 22;
 
                     // Initialisation
                     $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);

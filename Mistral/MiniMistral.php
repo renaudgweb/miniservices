@@ -2,7 +2,7 @@
 /**
  * @file MiniMistral.php
  * @author RenaudG
- * @version 1.0 Avril 2025
+ * @version 1.0 Mai 2025
  *
  * Fonctions utlisées dans le script MiniMistral
  * 
@@ -54,7 +54,7 @@ function getMistralResponse($userPrompt) {
             // On vide le fichier
             file_put_contents('mistral.txt', '');
             $response = $responseData['choices'][0]['message']['content'];
-            file_put_contents('mistral.txt', $response);
+            file_put_contents('mistral.txt', "\n" . $response);
         } else {
             return 'Format de réponse inattendu';
         }
