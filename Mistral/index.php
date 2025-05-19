@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.0 Mai 2025
+ * @version 1.1 Mai 2025
  *
  * Script via API MistralAI
  * 

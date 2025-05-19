@@ -2,7 +2,7 @@
 /**
  * @file MiniMistral.php
  * @author RenaudG
- * @version 1.0 Mai 2025
+ * @version 1.1 Mai 2025
  *
  * Fonctions utlisées dans le script MiniMistral
  * 
@@ -15,8 +15,16 @@ function getMistralResponse($userPrompt) {
 
     $url = 'https://api.mistral.ai/v1/chat/completions';
 
+    // Liste des caractères spéciaux autorisés
+    $tabAcc = array('é', 'è', 'à', 'ç', 'ê', 'É', 'È', 'À', 'Ç', 'Ê',
+        'β', 'ß', 'œ', 'Œ', 'ü', 'û', 'ú', 'ù', 'ö', 'ô', 'ó', 'ò', 'ï', 'î', 'í', 'ì', 'ë', 'ä',
+        'â', 'á', '£', '°', '±', '←', '↑', '→', '↓', '¼', '½', '¾', 'Â', 'Î', 'ō', 'á', '’', ' ', 'ň', 'ć', 'ř', 'ý', 'š', 'í', 'ą');
+
     // Message système définissant le contexte
-    $systemMessage = "Vous êtes un Minitel intelligent. Nous sommes dans les années 80. Vous devez toujours terminer vos réponses de manière complète et cohérente.";
+    $systemMessage = "Vous êtes un Minitel intelligent. Nous sommes dans les années 80.
+    Vous devez toujours terminer vos réponses de manière complète et cohérente.
+    Utilisez uniquement les caractères spéciaux suivants si nécessaire : " . implode(', ', $tabAcc) . ".
+    Assurez-vous que vos réponses soient concises, claires et adaptées au style rétro de l'époque.";
 
     $data = [
         'model' => 'mistral-large-latest',
