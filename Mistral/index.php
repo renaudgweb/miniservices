@@ -55,19 +55,23 @@ try {
                 break 2;
 
             case 'accueil-init-saisie':
-                $vdt = MiniPavi\MiniPaviCli::writeLine0('...', true);
-                if (empty($content[0]) || !isset($content[0])) {
+                if (!isset($content[0]) || empty(trim($content[0]))) {
                     $context['step'] = 'accueil';
                     break;
                 }
                 // Récupération de la question de l'utilisateur
                 $userPrompt = implode(" ", $content);
                 $userPrompt = rtrim($userPrompt);
-                // Appel à l'API Mistral AI
-                getMistralResponse($userPrompt);
-                $context['step'] = 'reponse';
+                $context['userprompt'] = $userPrompt;
+                $context['step'] = 'pre-reponse';
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('...', true);
                 $directCall = true;
                 break 2;
+
+            case 'pre-reponse':                
+                // Appel à l'API Mistral AI
+                getMistralResponse($context['userprompt']);
+                $context['step'] = 'reponse';
 
             case 'reponse':
                 if ($fctn == 'SOMMAIRE' || $fctn == 'GUIDE') {
