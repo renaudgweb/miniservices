@@ -47,9 +47,8 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
                 $vdt .= file_get_contents('3615CryptoMoney.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "S'initier n'est pas un délit.", VDT_TXTWHITE);
-                //$vdt .= MiniPavi\MiniPaviCli::writeCentered(24, "SUITE pour le cours du Bitcoin.", VDT_BLINK);
                 $vdt .= MiniPavi\MiniPaviCli::setPos(4, 24);
-                $vdt .= VDT_BGCYAN . VDT_TXTWHITE . VDT_BLINK . " SUITE ";
+                $vdt .= VDT_BGCYAN . VDT_TXTBLACK . VDT_BLINK . " SUITE ";
                 $vdt .= MiniPavi\MiniPaviCli::setPos(11, 24);
                 $vdt .= VDT_BGBLACK . VDT_TXTWHITE . " pour le cours du Bitcoin.";
 

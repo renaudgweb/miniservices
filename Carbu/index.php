@@ -56,12 +56,22 @@ try {
                 break 2;
 
             case 'accueil-init-saisie':
-                $vdt = MiniPavi\MiniPaviCli::writeLine0('Recherche en cours ...', true);
+                if (!isset($content[0]) || empty(trim($content[0]))) {
+                    $context['step'] = 'accueil';
+                    break;
+                }
                 // Récupération de la question de l'utilisateur
                 $location = $content[0]; // Exemple de ville ou code postal fourni par l'utilisateur
                 $location = rtrim($location); // enlever un espace à la fin de la chaîne
                 $location = str_replace(' ', '-', $location); // remplacer un espace par un tiret
-                $coordinates = getCoordinatesFromOpenMeteo($location);
+                $context['location'] = $location;
+                $context['step'] = 'pre-reponse';
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Recherche en cours ...', true);
+                $directCall = true;
+                break 2;
+
+            case 'pre-reponse':
+                $coordinates = getCoordinatesFromOpenMeteo($context['location']);
                 if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
                     $context['step'] = 'accueil';
                     break;
@@ -69,10 +79,7 @@ try {
                 list($latitude, $longitude) = $coordinates;
                 $nearbyStations = getNearbyStations($latitude, $longitude);
                 displayFuelPrices($nearbyStations, 'stations.txt');
-
                 $context['step'] = 'reponse';
-                $directCall = true;
-                break 2;
 
             case 'reponse':
                 if ($fctn == 'SOMMAIRE' || $fctn == 'GUIDE') {

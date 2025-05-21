@@ -68,8 +68,8 @@ try {
                 $directCall = true;
                 break 2;
 
-            case 'pre-reponse':                
-                // Appel à l'API Mistral AI
+            case 'pre-reponse':
+                // Appel à l'API MistralAI
                 getMistralResponse($context['userprompt']);
                 $context['step'] = 'reponse';
 
