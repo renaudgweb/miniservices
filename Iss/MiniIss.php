@@ -8,7 +8,7 @@
  *
  */
 
-$apiKey = 'ISUYuIFjh7NNJ8koqES2p4w7LwADre9I'; // Remplacez par votre clé API réelle
+$apiKey = 'VOTRE_CLE_API'; // Remplacez par votre clé API réelle
 
 function getAstronauts() {
     $url = "http://api.open-notify.org/astros.json";
@@ -32,6 +32,32 @@ function getLocation() {
     } else {
         return ["message" => "Failed to retrieve data from : iss-now.json"];
     }
+}
+
+function convertDecimalToDMS($decimal, $isLatitude) {
+    // Détermine si la valeur est positive ou négative
+    $direction = $decimal < 0 ? -1 : 1;
+    $decimal = abs($decimal);
+
+    // Calcule les degrés
+    $degrees = floor($decimal);
+
+    // Calcule les minutes
+    $temp = ($decimal - $degrees) * 60;
+    $minutes = floor($temp);
+
+    // Calcule les secondes
+    $seconds = round(($temp - $minutes) * 60, 2);
+
+    // Détermine le cardinal
+    if ($isLatitude) {
+        $cardinal = $direction == 1 ? 'nord' : 'sud';
+    } else {
+        $cardinal = $direction == 1 ? 'est' : 'ouest';
+    }
+
+    // Retourne le résultat sous forme de chaîne formatée
+    return sprintf("%d° %d' %.0f\" %s", $degrees, $minutes, $seconds, $cardinal);
 }
 
 function getPosition($latitude, $longitude) {
@@ -80,4 +106,5 @@ function getPosition($latitude, $longitude) {
         return 'Erreur HTTP: ' . $httpCode;
     }
 }
+
 ?>

@@ -58,7 +58,7 @@ try {
 
             case 'accueil-saisie':
                 if ($fctn == 'SUITE') {
-                    $context['step'] = 'iss-astros';
+                    $context['step'] = 'init-iss-astros';
                     break;
                 }
                 if ($fctn == 'SOMMAIRE') {
@@ -69,14 +69,26 @@ try {
                 $directCall = false;
                 break 2;
 
+            case 'init-iss-astros':
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Recherche des noms en cours ...', true);
+                $context['step'] = 'pre-iss-astros';
+                $directCall = true;
+                break 2;
+
+            case 'pre-iss-astros':
+                $astronautsData = getAstronauts();
+                $context['number'] = $astronautsData['number'];
+                $context['people'] = $astronautsData['people'];
+
+                $context['step'] = 'iss-astros';
+
             case 'iss-astros':
                 // Affichage des spationautes
-                $astronautsData = getAstronauts();
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 4) . VDT_TXTWHITE . "Il y a actuellement " . $astronautsData['number'] . " spationautes en orbite :";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 4) . VDT_TXTWHITE . "Il y a actuellement " . $context['number'] . " spationautes en orbite :";
 
                 $counter = 7;
-                foreach ($astronautsData['people'] as $astronaut) {
+                foreach ($context['people'] as $astronaut) {
                     $vdt .= MiniPavi\MiniPaviCli::setPos(4, $counter) . "- ";
                     $vdt .= MiniPavi\MiniPaviCli::toG2($astronaut['name']);
                     $vdt .= " -> " . $astronaut['craft'];
@@ -113,8 +125,11 @@ try {
                 $longitude = $issLocation['iss_position']['longitude'];
                 $mistralResponse = getPosition($latitude, $longitude);
 
-                $context['latitude'] = $latitude;
-                $context['longitude'] = $longitude;
+                $latitudeDMS = convertDecimalToDMS($latitude, true);
+                $longitudeDMS = convertDecimalToDMS($longitude, false);
+
+                $context['latitude'] = $latitudeDMS;
+                $context['longitude'] = $longitudeDMS;
                 $context['mistralResponse'] = $mistralResponse;
 
                 $context['step'] = 'iss-location';
@@ -124,8 +139,10 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
                 $vdt .= MiniPavi\MiniPaviCli::setPos(2, 3);
                 $vdt .= MiniPavi\MiniPaviCli::toG2($context['mistralResponse']);
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 21) . VDT_TXTWHITE . "Lat : " . $context['latitude'];
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 22) . VDT_TXTWHITE . "Lon : " . $context['longitude'];
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 20) . VDT_TXTWHITE;
+                $vdt .= MiniPavi\MiniPaviCli::toG2($context['latitude'] . ", " . $context['longitude']);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 21) . VDT_TXTWHITE . "7,66 km/s";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 22) . VDT_TXTWHITE . "408 km";
                 $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
                 $vdt .= MiniPavi\MiniPaviCli::writeLine0("Le " . $formatter->format(new DateTime()));
 
