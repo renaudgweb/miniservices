@@ -4,7 +4,7 @@
   <img src="minipavi.png" alt="MiniPavi logo" width="600"/>
 </p>
 
-Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient trois applications Minitel modernisées grâce à la passerelle MiniPavi. Chaque application exploite les capacités de MiniPavi pour offrir une expérience Minitel enrichie et interactive.
+Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient quatre applications Minitel modernisées grâce à la passerelle MiniPavi. Chaque application exploite les capacités de MiniPavi pour offrir une expérience Minitel enrichie et interactive.
 
 ## 🛢️ 3613 CARBU
 
