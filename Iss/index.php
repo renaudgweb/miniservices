@@ -1,0 +1,141 @@
+<?php
+/**
+ * @file index.php
+ * @author RenaudG
+ * @version 1.0 Mai 2025
+ *
+ * Script pour l'ISS
+ *
+ */
+
+require "../MiniPaviCli.php";
+require "mini_iss.php";
+
+//error_reporting(E_USER_NOTICE|E_USER_WARNING);
+error_reporting(E_ERROR);
+ini_set('display_errors', 0);
+
+try {
+    MiniPavi\MiniPaviCli::start();
+    if (MiniPavi\MiniPaviCli::$fctn == 'CNX' || MiniPavi\MiniPaviCli::$fctn == 'DIRECTCNX') {
+        $context = array('step' => 'accueil');
+    } else {
+        if (MiniPavi\MiniPaviCli::$fctn == 'FIN') {
+            exit;
+        }
+        $context = unserialize(MiniPavi\MiniPaviCli::$context);
+        $fctn = MiniPavi\MiniPaviCli::$fctn;
+        $content = MiniPavi\MiniPaviCli::$content;
+    }
+
+    // Initialisation des variables
+    $vdt = ''; // Le contenu vidéotex à envoyer au Minitel de l'utilisateur
+    $cmd = null; // La commande à exécuter au niveau de MiniPavi
+    $directCall = false; // Ne pas rappeler le script immédiatement
+
+    // Récupération des données
+    $astronauts_data = get_astronauts();
+    $iss_location = get_location();
+
+    // Définir les paramètres régionaux en français
+    $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::SHORT);
+    $formatter->setPattern('d MMMM yyyy \'à\' HH:mm');
+
+    while (true) {
+        // Gestion de la navigation utilisateur
+        switch ($context['step']) {
+            case 'accueil':
+                // Affichage de la page d'accueil
+                $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
+                $vdt .= file_get_contents('iss.vdt');
+                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 5) . VDT_TXTCYAN . "3615 ISS";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 6) . VDT_TXTCYAN . date('d/m/Y H:i');
+                $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Porte vers les étoiles...", VDT_TXTWHITE);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(4, 24);
+                $vdt .= VDT_BGCYAN . VDT_TXTBLACK . VDT_BLINK . " SUITE ";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(11, 24);
+                $vdt .= VDT_BGBLACK . VDT_TXTWHITE . " pour le nom des spationautes.";
+
+                $context['step'] = 'accueil-saisie';
+                $directCall = false;
+                break 2;
+
+            case 'accueil-saisie':
+                if ($fctn == 'SUITE') {
+                    $context['step'] = 'iss-astros';
+                    break;
+                }
+                if ($fctn == 'SOMMAIRE') {
+                    $context['step'] = 'accueil';
+                    break;
+                }
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur SUITE !');
+                $directCall = false;
+                break 2;
+
+            case 'iss-astros':
+                // Affichage des spationautes
+                $vdt = MiniPavi\MiniPaviCli::clearScreen();
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 5) . VDT_TXTWHITE . "Il y a actuellement " . $astronauts_data['number'] . " spationautes en orbite :";
+
+                $counter = 7;
+                foreach ($astronauts_data['people'] as $astronaut) {
+                    $vdt .= MiniPavi\MiniPaviCli::setPos(4, $counter) . VDT_TXTWHITE . "- " . $astronaut['name'];
+                    $counter += 1;
+                }
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+                $context['step'] = 'iss-suite';
+                $directCall = false;
+                break 2;
+
+            case 'iss-suite':
+                if ($fctn == 'SUITE') {
+                    $context['step'] = 'iss-location';
+                    break;
+                }
+                if ($fctn == 'SOMMAIRE') {
+                    $context['step'] = 'accueil';
+                    break;
+                }
+                $vdt = MiniPavi\MiniPaviCli::writeLine0('Tapez sur SUITE !');
+                $directCall = false;
+                break 2;
+
+            case 'iss-location':
+                // Affichage de la position de l'ISS
+                $vdt = MiniPavi\MiniPaviCli::clearScreen();
+
+                $latitude = $iss_location['iss_position']['latitude'];
+                $longitude = $iss_location['iss_position']['longitude'];
+                $mistral_response = get_position($latitude, $longitude);
+
+                $vdt .= MiniPavi\MiniPaviCli::setPos(3, 10) . VDT_TXTWHITE . "Latitude:   " . $latitude;
+                $vdt .= MiniPavi\MiniPaviCli::setPos(3, 11) . VDT_TXTWHITE . "Longitude:  " . $longitude;
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 16) . VDT_TXTWHITE . $mistral_response;
+                $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+
+                $context['step'] = 'accueil-saisie';
+                $directCall = false;
+                break 2;
+        }
+    }
+
+    if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+        $prot = 'https';
+    } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+        $prot = 'https';
+    } elseif (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
+        $prot = 'https';
+    } elseif (isset($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT']) === 443) {
+        $prot = 'https';
+    } else {
+        $prot = 'http';
+    }
+    $nextPage = $prot . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+    MiniPavi\MiniPaviCli::send($vdt, $nextPage, serialize($context), true, $cmd, $directCall);
+} catch (Exception $e) {
+    throw new Exception('Erreur MiniPavi ' . $e->getMessage());
+}
+exit;
+?>
