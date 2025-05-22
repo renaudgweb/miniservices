@@ -49,7 +49,7 @@ try {
                 $vdt = MiniPavi\MiniPaviCli::clearScreen() . PRO_MIN . PRO_LOCALECHO_OFF;
                 $vdt .= file_get_contents('iss.vdt');
                 $vdt .= MiniPavi\MiniPaviCli::setPos(1, 5) . VDT_TXTCYAN . "3615 ISS";
-                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 6) . VDT_TXTCYAN . date('d/m/Y H:i');
+                $vdt .= MiniPavi\MiniPaviCli::setPos(1, 6) . VDT_TXTCYAN . $formatter->format(new DateTime());
                 $vdt .= MiniPavi\MiniPaviCli::writeCentered(16, "Porte vers les étoiles...", VDT_TXTWHITE);
                 $vdt .= MiniPavi\MiniPaviCli::setPos(4, 24);
                 $vdt .= VDT_BGCYAN . VDT_TXTBLACK . VDT_BLINK . " SUITE ";
@@ -120,7 +120,6 @@ try {
                 break 2;
         }
     }
-
     if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
         $prot = 'https';
     } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
