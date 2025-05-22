@@ -9,7 +9,7 @@
  */
 
 require "../MiniPaviCli.php";
-require "mini_iss.php";
+require "miniIss.php";
 
 //error_reporting(E_USER_NOTICE|E_USER_WARNING);
 error_reporting(E_ERROR);
@@ -34,8 +34,8 @@ try {
     $directCall = false; // Ne pas rappeler le script immédiatement
 
     // Récupération des données
-    $astronauts_data = get_astronauts();
-    $iss_location = get_location();
+    $astronautsData = getAstronauts();
+    $issLocation = getLocation();
 
     // Définir les paramètres régionaux en français
     $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::SHORT);
@@ -76,10 +76,10 @@ try {
             case 'iss-astros':
                 // Affichage des spationautes
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 5) . VDT_TXTWHITE . "Il y a actuellement " . $astronauts_data['number'] . " spationautes en orbite :";
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 5) . VDT_TXTWHITE . "Il y a actuellement " . $astronautsData['number'] . " spationautes en orbite :";
 
                 $counter = 7;
-                foreach ($astronauts_data['people'] as $astronaut) {
+                foreach ($astronautsData['people'] as $astronaut) {
                     $vdt .= MiniPavi\MiniPaviCli::setPos(4, $counter) . VDT_TXTWHITE . "- " . $astronaut['name'];
                     $counter += 1;
                 }
@@ -106,13 +106,13 @@ try {
                 // Affichage de la position de l'ISS
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
 
-                $latitude = $iss_location['iss_position']['latitude'];
-                $longitude = $iss_location['iss_position']['longitude'];
-                $mistral_response = get_position($latitude, $longitude);
+                $latitude = $issLocation['iss_position']['latitude'];
+                $longitude = $issLocation['iss_position']['longitude'];
+                $mistralResponse = getPosition($latitude, $longitude);
 
                 $vdt .= MiniPavi\MiniPaviCli::setPos(3, 10) . VDT_TXTWHITE . "Latitude:   " . $latitude;
                 $vdt .= MiniPavi\MiniPaviCli::setPos(3, 11) . VDT_TXTWHITE . "Longitude:  " . $longitude;
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 16) . VDT_TXTWHITE . $mistral_response;
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 16) . VDT_TXTWHITE . $mistralResponse;
                 $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
 
                 $context['step'] = 'accueil-saisie';

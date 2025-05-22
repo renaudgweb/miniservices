@@ -80,14 +80,4 @@ function getPosition($latitude, $longitude) {
         return 'Erreur HTTP: ' . $httpCode;
     }
 }
-
-// Exemple d'utilisation
-/*$astronauts = getAstronauts();
-$location = getLocation();
-$position = getPosition($location['iss_position']['latitude'], $location['iss_position']['longitude']);
-
-print_r($astronauts);
-print_r($location);
-echo $position;*/
-
 ?>
