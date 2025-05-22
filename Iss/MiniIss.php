@@ -8,7 +8,7 @@
  *
  */
 
-$apiKey = 'VOTRE_CLE_API'; // Remplacez par votre clé API réelle
+$apiKey = 'ISUYuIFjh7NNJ8koqES2p4w7LwADre9I'; // Remplacez par votre clé API réelle
 
 function getAstronauts() {
     $url = "http://api.open-notify.org/astros.json";

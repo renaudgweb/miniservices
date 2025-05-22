@@ -122,11 +122,12 @@ try {
             case 'iss-location':
                 // Affichage de la position de l'ISS
                 $vdt = MiniPavi\MiniPaviCli::clearScreen();
-                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 2);
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 3);
                 $vdt .= MiniPavi\MiniPaviCli::toG2($context['mistralResponse']);
-                $vdt .= MiniPavi\MiniPaviCli::setPos(3, 21) . VDT_TXTWHITE . "Latitude  :   " . $context['latitude'];
-                $vdt .= MiniPavi\MiniPaviCli::setPos(3, 22) . VDT_TXTWHITE . "Longitude :   " . $context['longitude'];
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 21) . VDT_TXTWHITE . "Lat : " . $context['latitude'];
+                $vdt .= MiniPavi\MiniPaviCli::setPos(2, 22) . VDT_TXTWHITE . "Lon : " . $context['longitude'];
                 $vdt .= MiniPavi\MiniPaviCli::setPos(18, 24) . VDT_TXTWHITE . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ";
+                $vdt .= MiniPavi\MiniPaviCli::writeLine0("Le " . $formatter->format(new DateTime()));
 
                 $context['step'] = 'accueil-saisie';
                 $directCall = false;
