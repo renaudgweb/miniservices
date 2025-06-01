@@ -4,7 +4,7 @@
   <img src="minipavi.png" alt="MiniPavi logo" width="600"/>
 </p>
 
-Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient cinq applications Minitel modernisées grâce à la passerelle MiniPavi. Chaque application exploite les capacités de MiniPavi pour offrir une expérience Minitel enrichie et interactive.
+Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient six applications Minitel modernisées grâce à la passerelle MiniPavi. Chaque application exploite les capacités de MiniPavi pour offrir une expérience Minitel enrichie et interactive.
 
 ## 🛢️ 3613 CARBU
 
@@ -50,6 +50,15 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient cinq a
   - Affichage de la position actuelle de l'ISS.
   - Liste des astronautes actuellement à bord de l'ISS.
   - Mises à jour en temps réel des informations.
+
+## 🔐 3615 PWNED
+
+**3615 PWNED** permet de vérifier si une adresse e-mail ou un mot de passe a été compromis dans une fuite de données, en s’appuyant sur l’API [Have I Been Pwned](https://haveibeenpwned.com/). C’est une application de sensibilisation à la cybersécurité, accessible depuis un terminal Minitel.
+
+- **Fonctionnalités** :
+  - Vérification de la compromission d'une adresse e-mail.
+  - Vérification sécurisée (par préfixe SHA-1) de mots de passe.
+  - Résultats affichés directement en vidéotex sur Minitel.
 
 ## 🚀 Utilisation de la Passerelle MiniPavi
 
