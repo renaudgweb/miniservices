@@ -12,7 +12,6 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient six ap
 
 - **Fonctionnalités** :
   - Affichage des prix des carburants.
-  - Mises à jour en temps réel.
   - Navigation simple via les touches du Minitel.
 
 ## 🧠 3614 MISTRAL
@@ -30,7 +29,6 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient six ap
 
 - **Fonctionnalités** :
   - Suivi des cours des cryptomonnaies.
-  - Mises à jour en temps réel.
   - Navigation fluide entre les différentes cryptomonnaies.
 
 ## 🎰 3615 LOTO
@@ -40,7 +38,6 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient six ap
 - **Fonctionnalités** :
   - Consultation des résultats du dernier tirage du Loto.
   - Consultation des résultats du dernier tirage de l'Euromillions.
-  - Mises à jour en temps réel des résultats.
 
 ## 🛰️ 3615 ISS
 
@@ -49,7 +46,6 @@ Bienvenue dans le dépôt des applications MiniPavi ! Ce dépôt contient six ap
 - **Fonctionnalités** :
   - Affichage de la position actuelle de l'ISS.
   - Liste des astronautes actuellement à bord de l'ISS.
-  - Mises à jour en temps réel des informations.
 
 ## 🔐 3615 PWNED
 
