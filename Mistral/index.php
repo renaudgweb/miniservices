@@ -79,7 +79,6 @@ try {
                     $context['reponse'] = '';
                     break;
                 }
-                $textFilename = 'mistral.txt';
 
                 // Affichage de la réponse
                 $objDisplayPaginatedText = @$context['reponse'];
@@ -94,6 +93,8 @@ try {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::setPos(1, 24 - $i);
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
+
+                    $textFilename = 'mistral.txt';
 
                     $objDisplayPaginatedText = new DisplayPaginatedText(
                         $vdtStart,
