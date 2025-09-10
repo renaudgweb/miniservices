@@ -64,7 +64,11 @@ function getMistralResponse($userPrompt) {
             $response = $responseData['choices'][0]['message']['content'];
             file_put_contents('mistral.txt', "\n" . $response);
             // On log les demandes
-            file_put_contents('mistral.log', "USER :\n" . $userPrompt . "\nMISTRAL :\n" . $response . "\n\n---------------\n\n");
+            file_put_contents(
+                'mistral.log',
+                "USER :\n" . $userPrompt . "\n\nMISTRAL :\n" . $response . "\n\n---------------\n\n",
+                FILE_APPEND
+            );
         } else {
             return 'Format de réponse inattendu';
         }
