@@ -15,7 +15,7 @@
  * Exemple d'un fichier (extrait) qui pourra être affiché en multi-page:
  * - La premère ligne représente le titre
  * - les lignes commençant par # seront d'une couleur différente
- 
+
 Les autres...
 Suite à l'annulation de sa licence le 2 février 1987, un nouvel appel d'offres est effectué afin d'occupper le 6ème réseau de télévision.
 
@@ -44,23 +44,23 @@ class DisplayPaginatedText {
 		private $lCounter;			// Numéro de ligne pour positionner le compteur de page
 		private $cCounter;			// Numéro de colonne pour positionner le compteur de page
 		private $vdtPreCounter;		// Videotex éventuel à afficher avant le compteur de page
-		
+
 		private $lText;				// Numéro de ligne pour positionner le début du texte 
 		private $cText;				// Numéro de colonne pour positionner le début du texte
 		private $maxLengthText;		// Longueur max d'une ligne de texte
 		private $normalColor;		// Couleur texte normale (code videotex)
 		private $specialColor;		// Couleur texte si la ligne commence par un "#" (code videotex)
-		
+
 		private $vdtPreText;		// Videotex éventuel à afficher avant chaque début de ligne
-		
+
 		private $vdtNone;			// Videotex à afficher indiquant les choix possible si 1ère et unique page (positionnement inclus)
 		private $vdtSuite;			// Videotex à afficher indiquant les choix possible si 1ère page (positionnement inclus)
 		private $vdtRetour;			// Videotex à afficher indiquant les choix possible si dernière page (positionnement inclus)
 		private $vdtSuiteRetour; 	// Videotex à afficher indiquant les choix possible si page intermédiaire (positionnement inclus)
-		
+
 		private $vdtErrNoPrev;		// Videotex à afficher en ligne 0 indiquant qu'il n y a pas de page précédente
 		private $vdtErrNoNext;		// Videotex à afficher en ligne 0 indiquant qu'il n y a pas de page suivante
-		
+
 		private $lines;				// Nombre de lignes par page
 
 		private $step;				// Usage interne : Etape (initialisation, etc)
@@ -70,41 +70,41 @@ class DisplayPaginatedText {
 	/*************************************************
 	// Gère l'affichage multi-page.
 	*************************************************/
-	
-	function __construct($vdtStart,$vdtClearPage,$textFilename,$lTitle,$cTitle,$vdtPreTitle,$lCounter,$cCounter,$vdtPreCounter,$lText,$cText,$maxLengthText,$normalColor,$specialColor,$vdtPreText,$vdtNone,$vdtSuite,$vdtRetour,$vdtSuiteRetour,$vdtErrNoPrev,$vdtErrNoNext,$lines,$isFile=true) {
-		$this->vdtStart = $vdtStart;			
-		$this->vdtClearPage= $vdtClearPage;		
-		$this->textFilename=$textFilename;		
-		$this->isFile=$isFile;	
-		$this->lTitle=$lTitle;					
-		$this->cTitle=$cTitle;					
-		$this->vdtPreTitle = $vdtPreTitle;		
-		$this->lCounter=$lCounter;				
-		$this->cCounter=$cCounter;				
-		$this->vdtPreCounter = $vdtPreCounter;	
-		
-		$this->lText = $lText;					
-		$this->cText = $cText;					
-		$this->maxLengthText = $maxLengthText;
-		$this->normalColor = $normalColor;					
-		$this->specialColor = $specialColor;					
-		$this->vdtPreText = $vdtPreText;		
 
-		
-		$this->vdtNone = $vdtNone;			
-		$this->vdtSuite = $vdtSuite;			
-		$this->vdtRetour = $vdtRetour;			
-		$this->vdtSuiteRetour = $vdtSuiteRetour; 
-		
+	function __construct($vdtStart,$vdtClearPage,$textFilename,$lTitle,$cTitle,$vdtPreTitle,$lCounter,$cCounter,$vdtPreCounter,$lText,$cText,$maxLengthText,$normalColor,$specialColor,$vdtPreText,$vdtNone,$vdtSuite,$vdtRetour,$vdtSuiteRetour,$vdtErrNoPrev,$vdtErrNoNext,$lines,$isFile=true) {
+		$this->vdtStart = $vdtStart;
+		$this->vdtClearPage= $vdtClearPage;
+		$this->textFilename=$textFilename;
+		$this->isFile=$isFile;
+		$this->lTitle=$lTitle;
+		$this->cTitle=$cTitle;
+		$this->vdtPreTitle = $vdtPreTitle;
+		$this->lCounter=$lCounter;
+		$this->cCounter=$cCounter;
+		$this->vdtPreCounter = $vdtPreCounter;
+
+		$this->lText = $lText;
+		$this->cText = $cText;
+		$this->maxLengthText = $maxLengthText;
+		$this->normalColor = $normalColor;
+		$this->specialColor = $specialColor;
+		$this->vdtPreText = $vdtPreText;
+
+
+		$this->vdtNone = $vdtNone;
+		$this->vdtSuite = $vdtSuite;
+		$this->vdtRetour = $vdtRetour;
+		$this->vdtSuiteRetour = $vdtSuiteRetour;
+
 		$this->vdtErrNoPrev = $vdtErrNoPrev;
 		$this->vdtErrNoNext = $vdtErrNoNext;
-		
-		$this->lines = $lines;					
-		
-		$this->step = 0;					
-		$this->displayedPage = 0;					
+
+		$this->lines = $lines;
+
+		$this->step = 0;
+		$this->displayedPage = 0;
 	}
-	
+
 	/*************************************************
 	// Gère l'affichage multi-page.
 	// Méthode devant être appellée à chaque action de l'utilisateur
@@ -123,20 +123,20 @@ class DisplayPaginatedText {
 				return false;
 			else $vdt= "\x14";
 		}
-		
+
 
 		$tLines=$this->getArticle($this->textFilename,$this->isFile,$this->maxLengthText,$title);	
-		
+
 		$numPages = ceil(count($tLines)/$this->lines);
 		$cLines = count($tLines);
-		
+
 		switch ($fctn) {
 			case 'SUITE':
 				if ($this->displayedPage+1<$numPages) {
-					$this->displayedPage++;		
+					$this->displayedPage++;
 					$vdt.= $this->vdtClearPage;
 					break;
-				} else { 
+				} else {
 					$vdt.= "\x1F@A".$this->vdtErrNoNext."\x18\n";
 					return true;
 				}
@@ -162,7 +162,7 @@ class DisplayPaginatedText {
 		for ($j=0,$i=$start;$i<$stop;$i++,$j++) {
 			if ($i>=$cLines)
 				break;
-			$vdt.= "\x1F@A\x18";				
+			$vdt.= "\x1F@A\x18";
 			$vdt.="\x1F".chr(64+$this->lText+$j).chr(64+$this->cText);
 			if (substr($tLines[$i],0,1)=='#') {	// si la ligne commence par "#" on ecrit en couleur spéciale
 				$line = substr($tLines[$i],1);
@@ -176,12 +176,12 @@ class DisplayPaginatedText {
 			}
 			$vdt.=$color.$this->vdtPreText.$this->toG2(mb_substr($line,0,$this->maxLengthText));
 		}
-		
+
 		$vdt.= "\x1F".chr(64+$this->lCounter).chr(64+$this->cCounter).$this->vdtPreCounter;
 		$vdt.= ($this->displayedPage+1).'/'.$numPages;
-		
+
 		$vdt.= "\x1F".chr(64+$this->lCounter).chr(64+$this->cCounter).$this->vdtPreCounter;
-		
+
 		if ($this->displayedPage+1<$numPages && $this->displayedPage>0) 
 			$vdt.=$this->vdtSuiteRetour;
 		else if ($this->displayedPage>0) 
@@ -212,13 +212,13 @@ class DisplayPaginatedText {
 
 
 	private function toG2($str) {
-		
+
 		$str=preg_replace('/[\x00-\x1F\x81\x8D\x8F\x90\x9D]/', ' ', $str);
-		
+
 		$tabAcc=array('é','è','à','ç','ê','É','È','À','Ç','Ê',
 		'β','ß','œ','Œ','ü','û','ú','ù','ö','ô','ó','ò','ï','î','í','ì','ë','ä',
 		'â','á','£','°','±','←','↑','→','↓','¼','½','¾','Â','Î','ō','á','’',' ','ň','ć','ř','ý','š','í','ą');
-		
+
 		$tabG2=array("\x19"."\x42e",
 		"\x19"."\x41e",
 		"\x19"."\x41a",
@@ -229,40 +229,40 @@ class DisplayPaginatedText {
 		"\x19"."\x41A",
 		"\x19"."\x4B\x63",
 		"\x19"."\x43E",
-		"\x19"."\x7B",		
-		"\x19"."\x7B",		
-		"\x19"."\x7A",		
-		"\x19"."\x6A",		
-		"\x19"."\x48\x75",		
-		"\x19"."\x43\x75",		
-		"\x19"."\x42\x75",		
-		"\x19"."\x41\x75",		
-		"\x19"."\x48\x6F",		
-		"\x19"."\x43\x6F",		
-		"\x19"."\x42\x6F",		
-		"\x19"."\x41\x6F",		
-		"\x19"."\x48\x69",		
-		"\x19"."\x43\x69",		
-		"\x19"."\x42\x69",		
-		"\x19"."\x41\x69",		
-		"\x19"."\x48\x65",		
-		"\x19"."\x48\x61",		
-		"\x19"."\x43\x61",		
+		"\x19"."\x7B",
+		"\x19"."\x7B",
+		"\x19"."\x7A",
+		"\x19"."\x6A",
+		"\x19"."\x48\x75",
+		"\x19"."\x43\x75",
+		"\x19"."\x42\x75",
+		"\x19"."\x41\x75",
+		"\x19"."\x48\x6F",
+		"\x19"."\x43\x6F",
+		"\x19"."\x42\x6F",
+		"\x19"."\x41\x6F",
+		"\x19"."\x48\x69",
+		"\x19"."\x43\x69",
+		"\x19"."\x42\x69",
+		"\x19"."\x41\x69",
+		"\x19"."\x48\x65",
+		"\x19"."\x48\x61",
+		"\x19"."\x43\x61",
 		"\x19"."\x42\x61",
-		"\x19"."\x23",		
-		"\x19"."\x30",		
-		"\x19"."\x31",		
-		"\x19"."\x2C",		
-		"\x19"."\x2D",		
-		"\x19"."\x2E",		
-		"\x19"."\x2F",		
-		"\x19"."\x3C",		
-		"\x19"."\x3D",		
+		"\x19"."\x23",
+		"\x19"."\x30",
+		"\x19"."\x31",
+		"\x19"."\x2C",
+		"\x19"."\x2D",
+		"\x19"."\x2E",
+		"\x19"."\x2F",
+		"\x19"."\x3C",
+		"\x19"."\x3D",
 		"\x19"."\x3E",
 		"\x19"."\x43A",
 		'I','o','a',"'",' ','n','c','r','y','s','i','a'
 		);
-		
+
 		foreach($tabAcc as $k=>$c) {
 			$str=mb_ereg_replace($c,$tabG2[$k], $str);
 		}

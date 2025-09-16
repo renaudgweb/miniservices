@@ -5,7 +5,7 @@
  * @version 1.1 Mai 2025
  *
  * Script via API data.economie.gouv.fr
- * 
+ *
  */
 
 require "../MiniPaviCli.php";

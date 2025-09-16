@@ -5,7 +5,7 @@
  * @version 1.1 Mai 2025
  *
  * Fonctions utlisées dans le script MiniMistral
- * 
+ *
  */
 
 $apiKey = 'VOTRE_CLE_API'; // Remplacez par votre clé API réelle

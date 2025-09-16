@@ -5,12 +5,12 @@
  * @version 1.0 Mai 2025
  *
  * Fonctions utlisées dans le script MiniLoto
- * 
+ *
  */
 
 function getLotoResultat() {
     $url = 'https://tirage-gagnant.com/loto/resultats-loto/';
-    
+
     // Charger le HTML de la page
     $html = file_get_contents($url);
     if (!$html) return null;
@@ -50,7 +50,7 @@ function getLotoResultat() {
 
 function getEuromillionsResultat() {
     $url = 'https://tirage-gagnant.com/euromillions/resultats-euromillions/';
-    
+
     // Charger le HTML de la page
     $html = file_get_contents($url);
     if (!$html) return null;

@@ -5,7 +5,7 @@
  * @version 1.0 Juin 2025
  *
  * Script via API haveibeenpwned.com
- * 
+ *
  */
 
 require "../MiniPaviCli.php";

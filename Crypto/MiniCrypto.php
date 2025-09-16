@@ -5,7 +5,7 @@
  * @version 1.1 Mai 2025
  *
  * Fonctions utlisées dans le script MiniCrypto
- * 
+ *
  */
 
 $URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum%2Cripple%2Cbinancecoin%2Csolana%2Ctron%2Cdogecoin%2Ccardano%2C&vs_currencies=eur';
