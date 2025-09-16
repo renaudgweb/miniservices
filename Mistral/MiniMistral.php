@@ -66,7 +66,7 @@ function getMistralResponse($userPrompt) {
             // On log les demandes
             file_put_contents(
                 'mistral.log',
-                "USER :\n" . $userPrompt . "\n\nMISTRAL :\n" . $response . "\n\n---------------\n\n",
+                date('d/m/Y H:i:s') . " - USER :\n" . $userPrompt . "\n\nMISTRAL :\n" . $response . "\n\n---------------\n\n",
                 FILE_APPEND
             );
         } else {
