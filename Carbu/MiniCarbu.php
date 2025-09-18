@@ -137,7 +137,7 @@ function displayFuelPrices($stations, $filename) {
 
         if (isset($stationDetails['Fuels']) && is_array($stationDetails['Fuels'])) {
             foreach ($stationDetails['Fuels'] as $fuel) {
-                $fuelName = $fuel['short_name'];
+                $fuelName = $fuel['shortName'];
                 $fuelPriceInEuros = $fuel['Price']['value'];
 
                 // Convertir le prix en francs
