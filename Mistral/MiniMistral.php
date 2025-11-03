@@ -27,13 +27,13 @@ function getMistralResponse($userPrompt) {
     Assurez-vous que vos réponses soient concises, claires et adaptées au style rétro de l'époque.";
 
     $data = [
-        'model' => 'mistral-large-latest',
+        'model' => 'mistral-medium-latest',
         'messages' => [
             ['role' => 'system', 'content' => $systemMessage],
             ['role' => 'user', 'content' => $userPrompt]
         ],
         'temperature' => 0.8,
-        'max_tokens' => 1024
+        'max_tokens' => 2048
     ];
 
     $headers = [
