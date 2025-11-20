@@ -71,17 +71,38 @@ try {
                 break 2;
 
             case 'pre-reponse':
-                $coordinates = getCoordinatesFromOpenMeteo($context['location']);
-                if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
+                // 1. Récupération des coordonnées GPS
+                try {
+                    $coordinates = getCoordinatesFromOpenMeteo($context['location']);
+                } catch (Exception $e) {
+                    // En cas d'erreur de géocodage, on retourne à l'accueil
                     $context['step'] = 'accueil';
                     break;
                 }
-                list($latitude, $longitude) = $coordinates;
-                $nearbyStations = getNearbyStations($latitude, $longitude);
 
-                // On stocke le tableau de texte directement dans le contexte
+                if (empty($coordinates) || !isset($coordinates[0]) || !isset($coordinates[1])) {
+                    // Si pas de coordonnées trouvées
+                    $context['step'] = 'accueil';
+                    break;
+                }
+
+                list($latitude, $longitude) = $coordinates;
+
+                // 2. Récupération des stations (avec sécurité)
+                try {
+                    $nearbyStations = getNearbyStations($latitude, $longitude);
+                } catch (Exception $e) {
+                    // Si l'API prix-carburants échoue, on ne plante pas le script.
+                    // On définit un tableau vide, ce qui déclenchera le message 
+                    // "Aucune station trouvée" via la fonction getStationsAsArray
+                    error_log("Erreur API Carburants : " . $e->getMessage());
+                    $nearbyStations = []; 
+                }
+
+                // 3. Génération du texte en mémoire (Plus de fichier stations.txt)
+                // On stocke le résultat dans le contexte utilisateur pour le passage au case 'reponse'
                 $context['stations_data'] = getStationsAsArray($nearbyStations);
-                // ----------------------
+
                 $context['step'] = 'reponse';
 
             case 'reponse':
