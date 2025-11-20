@@ -107,8 +107,8 @@ try {
                     $vdtPreTitle = '';
 
                     // Position du titre
-                    $lTitle = '';
-                    $cTitle = '';
+                    $lTitle = '1';
+                    $cTitle = '1';
                     // Position du compteur de page
                     $lCounter = 24;
                     $cCounter = 36;
