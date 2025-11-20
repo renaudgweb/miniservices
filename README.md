@@ -297,4 +297,6 @@ case 20:
 
 ## 📬 Contact
 
-Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à me contacter directement.
+Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue ou à me contacter directement par mail.
+
+<34276398+renaudgweb@users.noreply.github.com>
