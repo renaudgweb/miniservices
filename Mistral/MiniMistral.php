@@ -102,10 +102,10 @@ function getMistralResponse($userPrompt) {
         if (isset($responseData['choices'][0]['message']['content'])) {
             
             $content = $responseData['choices'][0]['message']['content'];
-            $usedModel = ($data['model'] == $modelPrincipal) ? "MEDIUM" : "SMALL (Fallback)";
+            $usedModel = ($data['model'] == $modelPrincipal) ? "mistral-medium-latest" : "mistral-small-latest";
 
             // --- UTILISATION DE LA NOUVELLE FONCTION DE LOG ---
-            $logMessage = date('d/m/Y H:i:s') . " - USER :\n" . $userPrompt . "\n\nMISTRAL ($usedModel) :\n" . $content . "\n\n---------------\n\n";
+            $logMessage = date('d/m/Y H:i:s') . " - USER :\n" . $userPrompt . "\n\n($usedModel) - MISTRAL :\n" . $content . "\n\n---------------\n\n";
             writeMistralLog($logMessage);
             // --------------------------------------------------
 
