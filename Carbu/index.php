@@ -2,10 +2,10 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.1 Mai 2025
+ * @version 1.2 Novembre 2025
  *
  * Script via API data.economie.gouv.fr
- *
+ * 
  */
 
 require "../MiniPaviCli.php";
@@ -78,7 +78,10 @@ try {
                 }
                 list($latitude, $longitude) = $coordinates;
                 $nearbyStations = getNearbyStations($latitude, $longitude);
-                displayFuelPrices($nearbyStations, 'stations.txt');
+
+                // On stocke le tableau de texte directement dans le contexte
+                $context['stations_data'] = getStationsAsArray($nearbyStations);
+                // ----------------------
                 $context['step'] = 'reponse';
 
             case 'reponse':
@@ -87,13 +90,16 @@ try {
                     $context['reponse'] = '';
                     break;
                 }
-                // Affichage de la réponse
+
+                // Récupération ou initialisation de l'objet
                 $objDisplayPaginatedText = @$context['reponse'];
+
                 if (! ($objDisplayPaginatedText instanceof DisplayPaginatedText)) {
 
                     // L'utilisateur n'a pas l'objet dans son contexte : il vient d'arriver sur cette rubrique
                     $vdtStart = MiniPavi\MiniPaviCli::clearScreen();
-                    // Effacement du texte affiché
+
+                    // Effacement du texte affiché (zone de page)
                     $vdtClearPage = MiniPavi\MiniPaviCli::setPos(1, 24);
                     $vdtClearPage .= VDT_TXTWHITE . VDT_FDNORM . MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     for ($i = 0; $i < 23; $i++) {
@@ -101,19 +107,25 @@ try {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
 
-                    $textFilename = 'stations.txt';
-
+                    // --- MODIFICATION MULTI-USER ---
+                    // On récupère le tableau généré à l'étape précédente
+                    // Si vide par sécurité, on met un message par défaut
+                    $textData = isset($context['stations_data']) ? $context['stations_data'] : array("Erreur: Aucune donnée récupérée.");
+                    
                     // titre Cyan, double hauteur
                     $vdtPreTitle = '';
 
-                    // Position du titre
-                    $lTitle = '1';
-                    $cTitle = '1';
+                    // --- CORRECTION ERREUR PHP 8 ---
+                    // On met des entiers (1) et non des chaines vides pour éviter l'erreur "int + string"
+                    $lTitle = 1; 
+                    $cTitle = 1;
+                    // -------------------------------
+
                     // Position du compteur de page
                     $lCounter = 24;
                     $cCounter = 36;
 
-                    // Compteur de page couleur Cyan
+                    // Compteur de page couleur Cyan (ici Blanc selon votre code original)
                     $vdtPreCounter = VDT_TXTWHITE;
 
                     // Position début du texte
@@ -126,13 +138,13 @@ try {
                     // Couleur normale : blanc
                     $normalColor = VDT_TXTWHITE;
 
-                    // Couleur spéciale : jaune
+                    // Couleur spéciale : jaune (si ligne commence par #)
                     $specialColor = VDT_TXTYELLOW;
 
                     // Rien de particulier à afficher avant chaque ligne
                     $vdtPreText = '';
 
-                    // Bas de page si ni Suite ni Retour acceptés (Sommaire n'est pas géré par l'objet, mais directement par le script)
+                    // Bas de page si ni Suite ni Retour acceptés
                     $vdtNone = MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTWHITE . VDT_FDINV . " Sommaire ";
 
                     // Bas de page si uniquement Suite accepté
@@ -154,13 +166,42 @@ try {
                     $lines = 22;
 
                     // Initialisation
-                    $objDisplayPaginatedText = new DisplayPaginatedText($vdtStart, $vdtClearPage, $textFilename, $lTitle, $cTitle, $vdtPreTitle, $lCounter, $cCounter, $vdtPreCounter, $lText, $cText, $maxLengthText, $normalColor, $specialColor, $vdtPreText, $vdtNone, $vdtSuite, $vdtRetour, $vdtSuiteRetour, $vdtErrNoPrev, $vdtErrNoNext, $lines);
+                    // --- MODIFICATION CONSTRUCTEUR ---
+                    // 3ème paramètre : $textData (le tableau) au lieu du nom de fichier
+                    // Dernier paramètre : false (pour dire que ce n'est pas un fichier physique)
+                    $objDisplayPaginatedText = new DisplayPaginatedText(
+                        $vdtStart, 
+                        $vdtClearPage, 
+                        $textData,     // <-- Ici on passe le tableau
+                        $lTitle, 
+                        $cTitle, 
+                        $vdtPreTitle, 
+                        $lCounter, 
+                        $cCounter, 
+                        $vdtPreCounter, 
+                        $lText, 
+                        $cText, 
+                        $maxLengthText, 
+                        $normalColor, 
+                        $specialColor, 
+                        $vdtPreText, 
+                        $vdtNone, 
+                        $vdtSuite, 
+                        $vdtRetour, 
+                        $vdtSuiteRetour, 
+                        $vdtErrNoPrev, 
+                        $vdtErrNoNext, 
+                        $lines,
+                        false          // <-- Ici on met false (isFile = false)
+                    );
+
                     // Exécution
                     $r = $objDisplayPaginatedText->process('', $vdt);
                 } else {
                     // L'utilisateur a déjà l'objet dans son contexte, exécution
                     $r = $objDisplayPaginatedText->process(MiniPavi\MiniPaviCli::$fctn, $vdt);
                 }
+
                 // Conserver l'objet dans le contexte utilisateur pour le récupérer lors de sa prochaine action
                 $context['reponse'] = $objDisplayPaginatedText;
                 break 2;

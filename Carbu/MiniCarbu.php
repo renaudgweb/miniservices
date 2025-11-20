@@ -2,7 +2,7 @@
 /**
  * @file MiniCarbu.php
  * @author RenaudG
- * @version 1.1 Mai 2025
+ * @version 1.2 Novembre 2025
  *
  * Fonctions utilisées dans le script MiniCarbu
  *
@@ -111,46 +111,68 @@ function getStationDetails($stationId) {
     }
 }
 
-function writeToFile($filename, $content) {
-    file_put_contents($filename, $content, FILE_APPEND);
-}
+/**
+ * Retourne un tableau de lignes formatées pour DisplayPaginatedText
+ * au lieu d'écrire dans un fichier.
+ */
+function getStationsAsArray($stations) {
+    $lines = [];
 
-function displayFuelPrices($stations, $filename) {
-    // Efface le contenu du fichier s'il existe déjà
-    file_put_contents($filename, '');
+    // LIGNE 0 : LE TITRE (Obligatoire pour votre classe d'affichage)
+    $lines[] = "STATIONS A PROXIMITE"; 
 
-    if (!is_array($stations)) {
-        throw new Exception("Invalid stations data.");
+    // CAS VIDE : Si le tableau est vide ou n'est pas un tableau
+    if (empty($stations) || !is_array($stations)) {
+        // On ajoute des lignes explicatives
+        $lines[] = ""; // Une ligne vide pour aérer
+        $lines[] = "Aucune station trouvée dans ce";
+        $lines[] = "secteur géographique.";
+        $lines[] = "";
+        $lines[] = "Conseils :";
+        $lines[] = "- Verifiez l'orthographe";
+        $lines[] = "- Essayez une ville voisine";
+        $lines[] = "- Elargissez la zone";
+        
+        return $lines; // On s'arrête là et on renvoie le message
     }
 
+    // CAS NORMAL : On boucle sur les stations
     foreach ($stations as $station) {
         $stationId = $station['id'];
-        $stationDetails = getStationDetails($stationId);
+        
+        try {
+            $stationDetails = getStationDetails($stationId);
+        } catch (Exception $e) {
+            continue; 
+        }
 
         $name = $stationDetails['name'];
-        $address = $stationDetails['Address']['street_line'] . ",\n" . $stationDetails['Address']['city_line'];
-        $distance = $station['distance'] / 1000;
-        $distance = round($distance, 1);
+        // S'assurer que l'adresse existe pour éviter des erreurs
+        $street = isset($stationDetails['Address']['street_line']) ? $stationDetails['Address']['street_line'] : '';
+        $city = isset($stationDetails['Address']['city_line']) ? $stationDetails['Address']['city_line'] : '';
+        
+        $distance = round($station['distance'] / 1000, 1);
 
-        $content = $name . " (" . $distance . " km)\n";
-        $content .= "$address\n";
+        $block = "$name ($distance km)\n";
+        $block .= "$street, $city\n";
 
         if (isset($stationDetails['Fuels']) && is_array($stationDetails['Fuels'])) {
             foreach ($stationDetails['Fuels'] as $fuel) {
                 $fuelName = $fuel['shortName'];
                 $fuelPriceInEuros = $fuel['Price']['value'];
-
-                // Convertir le prix en francs
                 $fuelPriceInFrancs = round($fuelPriceInEuros * 6.55957, 2);
-                $content .= " - $fuelName: " . $fuelPriceInFrancs . "F (" . $fuelPriceInEuros . "EUR)\n";
+                
+                $block .= " - $fuelName: " . $fuelPriceInFrancs . "F (" . $fuelPriceInEuros . "EUR)\n";
             }
         } else {
-            echo "No fuel prices available.\n";
+            $block .= "Prix non disponibles.\n";
         }
+        
+        $block .= "\n``````````````````````````````````````\n";
 
-        $content .= "\n``````````````````````````````````````\n";
-
-        writeToFile($filename, "\n" . $content);
+        $lines[] = $block;
     }
+
+    return $lines;
 }
 ?>
