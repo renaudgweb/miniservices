@@ -2,10 +2,10 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.1 Mai 2025
+ * @version 1.2 Novembre 2025
  *
  * Script via API MistralAI
- *
+ * 
  */
 
 require "../MiniPaviCli.php";
@@ -69,9 +69,11 @@ try {
                 break 2;
 
             case 'pre-reponse':
-                // Appel à l'API MistralAI
-                getMistralResponse($context['userprompt']);
+                // Appel à l'API MistralAI et stockage dans le contexte
+                // getMistralResponse retourne maintenant un TABLEAU
+                $context['mistral_data'] = getMistralResponse($context['userprompt']);
                 $context['step'] = 'reponse';
+                // Pas de break pour afficher tout de suite
 
             case 'reponse':
                 if ($fctn == 'SOMMAIRE' || $fctn == 'GUIDE') {
@@ -94,25 +96,34 @@ try {
                         $vdtClearPage .= MiniPavi\MiniPaviCli::repeatChar(' ', 39);
                     }
 
-                    $textFilename = 'mistral.txt';
+                    // --- RECUPERATION DES DONNEES ---
+                    $textData = isset($context['mistral_data']) ? $context['mistral_data'] : ['MISTRAL', 'Erreur de données.'];
+
+                    // --- CORRECTION PHP 8 (Int + String) ---
+                    // Remplacement des '' par des entiers pour lTitle et cTitle
+                    $lTitle = 7;
+                    $cTitle = 2; 
 
                     $objDisplayPaginatedText = new DisplayPaginatedText(
                         $vdtStart,
                         $vdtClearPage,
-                        $textFilename,
-                        '', '', '',            // titre : ligne 7, colonne 2, pas de préfixe
-                        24, 36, VDT_TXTYELLOW, // compteur de page ligne 24 col 36 en jaune
-                        7, 2, 38,            // texte ligne 8 col 2, 38 caractères max
+                        $textData,     // <-- On passe le tableau de données
+                        $lTitle,       // <-- 7 (et non '')
+                        $cTitle,       // <-- 2 (et non '')
+                        '',            // vdtPreTitle
+                        24, 36, VDT_TXTYELLOW, // compteur
+                        7, 2, 38,            // texte pos
                         VDT_TXTWHITE,        // couleur normale
                         VDT_TXTYELLOW,       // couleur spéciale (#)
-                        '',                  // rien avant chaque ligne
+                        '',                  // vdtPreText
                         MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Sommaire ",
                         MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
                         MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
                         MiniPavi\MiniPaviCli::setPos(3, 24) . VDT_TXTRED . VDT_FDINV . " Suite " . VDT_FDNORM . " " . VDT_FDINV . " Retour " . VDT_FDNORM . " ou " . VDT_FDINV . " Sommaire ",
                         MiniPavi\MiniPaviCli::toG2("Première page !"),
                         MiniPavi\MiniPaviCli::toG2("Dernière page !"),
-                        15 // Lignes par page
+                        15, // Lignes par page
+                        false // <-- IMPORTANT : false indique que ce n'est pas un fichier
                     );
                 }
 
