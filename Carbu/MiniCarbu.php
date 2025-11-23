@@ -119,7 +119,7 @@ function getStationsAsArray($stations) {
     $lines = [];
 
     // LIGNE 0 : LE TITRE (Obligatoire pour votre classe d'affichage)
-    $lines[] = "STATIONS A PROXIMITE"; 
+    $lines[] = "3613 CARBU"; 
 
     // CAS VIDE : Si le tableau est vide ou n'est pas un tableau
     if (empty($stations) || !is_array($stations)) {

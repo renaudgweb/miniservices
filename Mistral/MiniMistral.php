@@ -32,7 +32,7 @@ function getMistralResponse($userPrompt) {
     global $apiKey;
 
     $lines = [];
-    $lines[] = "MISTRAL IA"; 
+    $lines[] = "3614 MISTRAL"; 
 
     $url = 'https://api.mistral.ai/v1/chat/completions';
 
