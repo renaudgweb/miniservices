@@ -42,6 +42,16 @@ function getNearbyStations($latitude, $longitude) {
 
     $response = curl_exec($ch);
 
+    // Vérifier si l'erreur est un problème SSL (code erreur 60)
+    if (curl_errno($ch) == 60) {
+        error_log("Certificat expiré détecté. Nouvelle tentative sans vérification SSL.");
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+        $response = curl_exec($ch);
+    }
+
     if (curl_errno($ch)) {
         throw new Exception('Error:' . curl_error($ch));
     }
@@ -49,7 +59,6 @@ function getNearbyStations($latitude, $longitude) {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    // Afficher la réponse brute pour le débogage
     error_log("Raw response from Prix Carburants API: " . $response);
     error_log("HTTP Status Code: " . $httpCode);
 
@@ -58,12 +67,14 @@ function getNearbyStations($latitude, $longitude) {
     }
 
     $data = json_decode($response, true);
+
     if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new Exception("Failed to decode JSON response from Prix Carburants API. Error: " . json_last_error_msg());
+        throw new Exception("Failed to decode JSON. Error: " . json_last_error_msg());
     }
 
     return $data;
 }
+
 
 function getStationDetails($stationId) {
     $apiUrl = "https://api.prix-carburants.2aaz.fr/station/{$stationId}";
@@ -79,6 +90,16 @@ function getStationDetails($stationId) {
 
     $response = curl_exec($ch);
 
+    // Détection du certificat expiré
+    if (curl_errno($ch) == 60) {
+        error_log("Certificat expiré détecté pour station $stationId. Tentative sans SSL.");
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+        $response = curl_exec($ch);
+    }
+
     if (curl_errno($ch)) {
         throw new Exception('Error:' . curl_error($ch));
     }
@@ -86,28 +107,28 @@ function getStationDetails($stationId) {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    // Afficher la réponse brute pour le débogage
     error_log("Raw response from Prix Carburants API for station details: " . $response);
     error_log("HTTP Status Code: " . $httpCode);
 
     if ($httpCode !== 200 && $httpCode !== 206) {
         if ($httpCode === 429) {
             error_log("Rate limit exceeded. Retrying after 10 seconds.");
-            sleep(10); // Attendre 10 secondes avant de réessayer
-            return getStationDetails($stationId); // Réessayer
+            sleep(10);
+            return getStationDetails($stationId);
         }
-        throw new Exception("Failed to retrieve station details from Prix Carburants API. HTTP Status Code: " . $httpCode);
+        throw new Exception("Failed to retrieve station details. HTTP Status Code: " . $httpCode);
     }
 
     $data = json_decode($response, true);
+
     if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new Exception("Failed to decode JSON response from Prix Carburants API. Error: " . json_last_error_msg());
+        throw new Exception("JSON decode error: " . json_last_error_msg());
     }
 
     if (is_array($data) || (is_object($data) && $data = (array) $data)) {
         return $data;
     } else {
-        throw new Exception("Failed to retrieve station details or invalid response format.");
+        throw new Exception("Invalid response format.");
     }
 }
 
