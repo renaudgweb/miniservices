@@ -2,10 +2,10 @@
 /**
  * @file MiniCrypto.php
  * @author RenaudG
- * @version 1.1 Mai 2025
+ * @version 1.2 Février 2026
  *
  * Fonctions utlisées dans le script MiniCrypto
- *
+ * 
  */
 
 $URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cethereum%2Cripple%2Cbinancecoin%2Csolana%2Ctron%2Cdogecoin%2Ccardano%2C&vs_currencies=eur';
@@ -19,6 +19,7 @@ function getPrices() {
     curl_setopt($ch, CURLOPT_URL, $URL);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'MiniPavi-Crypto/1.2');
 
     // Exécuter la requête
     $response = curl_exec($ch);
