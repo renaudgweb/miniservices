@@ -2,7 +2,7 @@
 /**
  * @file index.php
  * @author RenaudG
- * @version 1.2 Novembre 2025
+ * @version 2.0 Juillet 2026
  *
  * Script via API MistralAI
  * 
@@ -21,7 +21,7 @@ try {
 
     // Initialisation du contexte utilisateur
     if (MiniPavi\MiniPaviCli::$fctn == 'CNX' || MiniPavi\MiniPaviCli::$fctn == 'DIRECTCNX') {
-        $context = array('step' => 'accueil');
+        $context = array('step' => 'accueil', 'history' => array());
     } else {
         if (MiniPavi\MiniPaviCli::$fctn == 'FIN') {
             exit;
@@ -71,7 +71,18 @@ try {
             case 'pre-reponse':
                 // Appel à l'API MistralAI et stockage dans le contexte
                 // getMistralResponse retourne maintenant un TABLEAU
-                $context['mistral_data'] = getMistralResponse($context['userprompt']);
+                $history = isset($context['history']) ? $context['history'] : array();
+                $rawContent = null;
+                $context['mistral_data'] = getMistralResponse($context['userprompt'], $history, $rawContent);
+
+                // Mémorisation de l'échange (3 derniers échanges max = 6 messages)
+                // Réponse tronquée à 600 caractères : le contexte MiniPavi voyage
+                // sérialisé à chaque requête, il doit rester léger
+                if ($rawContent !== null) {
+                    $history[] = array('role' => 'user', 'content' => $context['userprompt']);
+                    $history[] = array('role' => 'assistant', 'content' => mb_substr($rawContent, 0, 600));
+                    $context['history'] = array_slice($history, -6);
+                }
                 $context['step'] = 'reponse';
                 // Pas de break pour afficher tout de suite
 

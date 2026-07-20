@@ -2,7 +2,7 @@
 /**
  * @file MiniMistral.php
  * @author RenaudG
- * @version 1.4 Novembre 2025
+ * @version 2.0 Juillet 2026
  *
  * Fonctions utlisées dans le script MiniMistral
  *
@@ -28,7 +28,7 @@ function writeMistralLog($message) {
     file_put_contents($logFile, $message, FILE_APPEND);
 }
 
-function getMistralResponse($userPrompt) {
+function getMistralResponse($userPrompt, $history = array(), &$rawContent = null) {
     global $apiKey;
 
     $lines = [];
@@ -46,12 +46,18 @@ function getMistralResponse($userPrompt) {
     $modelPrincipal = 'mistral-medium-latest';
     $modelFallback = 'mistral-small-latest'; 
 
+    // Construction des messages : system + historique des derniers échanges + question actuelle
+    $messages = [['role' => 'system', 'content' => $systemMessage]];
+    foreach ($history as $msg) {
+        if (isset($msg['role'], $msg['content'])) {
+            $messages[] = ['role' => $msg['role'], 'content' => $msg['content']];
+        }
+    }
+    $messages[] = ['role' => 'user', 'content' => $userPrompt];
+
     $data = [
         'model' => $modelPrincipal,
-        'messages' => [
-            ['role' => 'system', 'content' => $systemMessage],
-            ['role' => 'user', 'content' => $userPrompt]
-        ],
+        'messages' => $messages,
         'temperature' => 0.8,
         'max_tokens' => 2048
     ];
@@ -102,6 +108,7 @@ function getMistralResponse($userPrompt) {
         if (isset($responseData['choices'][0]['message']['content'])) {
             
             $content = $responseData['choices'][0]['message']['content'];
+            $rawContent = $content; // Renvoyé à l'appelant pour l'historique de conversation
             $usedModel = ($data['model'] == $modelPrincipal) ? "mistral-medium-latest" : "mistral-small-latest";
 
             // --- UTILISATION DE LA NOUVELLE FONCTION DE LOG ---
