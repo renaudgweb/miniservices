@@ -2,7 +2,7 @@
 /**
  * @file MiniMistral.php
  * @author RenaudG
- * @version 2.0 Juillet 2026
+ * @version 2.1 Juillet 2026
  *
  * Fonctions utlisées dans le script MiniMistral
  *
@@ -11,9 +11,21 @@
 $apiKey = 'VOTRE_CLE_API'; // Remplacez par votre clé API réelle
 
 /**
- * Fonction de gestion des logs avec rotation automatique
+ * Sel pour l'anonymisation des identifiants de session.
+ * A personnaliser une fois puis ne plus changer (sinon les hash divergent).
+ * php -r 'echo bin2hex(random_bytes(16)), "\n";'
  */
-function writeMistralLog($message) {
+define('MISTRAL_LOG_SALT', 'changez-moi-en-une-valeur-secrete');
+
+/**
+ * Fonction de gestion des logs avec rotation automatique.
+ *
+ * Format : JSON Lines (un objet JSON par ligne, un echange par ligne).
+ * Robuste au parsing, aux reponses multi-lignes et extensible.
+ *
+ * @param array $entry Champs de l'echange (date, model, user, mistral, ...)
+ */
+function writeMistralLog($entry) {
     $logFile = 'mistral.log';
     $maxSize = 2 * 1024 * 1024; // 2 Mo
 
@@ -24,8 +36,21 @@ function writeMistralLog($message) {
         rename($logFile, $archiveName);
     }
 
-    // Écriture
-    file_put_contents($logFile, $message, FILE_APPEND);
+    // Écriture d'une ligne JSON (LOCK_EX : ecritures concurrentes possibles
+    // si plusieurs Minitel interrogent le service en meme temps)
+    $line = json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    file_put_contents($logFile, $line . "\n", FILE_APPEND | LOCK_EX);
+}
+
+/**
+ * Hash anonyme d'un identifiant de session MiniPavi.
+ * Permet de compter les visiteurs uniques sans stocker d'identite.
+ */
+function mistralSessionHash($id) {
+    if ($id === '' || $id === null) {
+        return '';
+    }
+    return substr(hash('sha256', MISTRAL_LOG_SALT . $id), 0, 12);
 }
 
 function getMistralResponse($userPrompt, $history = array(), &$rawContent = null) {
@@ -66,6 +91,9 @@ function getMistralResponse($userPrompt, $history = array(), &$rawContent = null
         'Content-Type: application/json',
         'Authorization: Bearer ' . $apiKey
     ];
+
+    // Mesure de la duree totale des appels API
+    $t0 = microtime(true);
 
     // --- TENTATIVE 1 ---
     $ch = curl_init($url);
@@ -111,10 +139,23 @@ function getMistralResponse($userPrompt, $history = array(), &$rawContent = null
             $rawContent = $content; // Renvoyé à l'appelant pour l'historique de conversation
             $usedModel = ($data['model'] == $modelPrincipal) ? "mistral-medium-latest" : "mistral-small-latest";
 
-            // --- UTILISATION DE LA NOUVELLE FONCTION DE LOG ---
-            $logMessage = date('d/m/Y H:i:s') . " - USER :\n" . $userPrompt . "\n\n($usedModel) - MISTRAL :\n" . $content . "\n\n---------------\n\n";
-            writeMistralLog($logMessage);
-            // --------------------------------------------------
+            // --- LOG JSONL (un echange par ligne) ---
+            $durationMs = (int) round((microtime(true) - $t0) * 1000);
+            $tokens = isset($responseData['usage']['total_tokens'])
+                ? (int) $responseData['usage']['total_tokens']
+                : null;
+            $session = mistralSessionHash(@\MiniPavi\MiniPaviCli::$uniqueId);
+
+            writeMistralLog([
+                'date'        => date('c'),   // ISO 8601, triable
+                'model'       => $usedModel,
+                'user'        => $userPrompt,
+                'mistral'     => $content,
+                'tokens'      => $tokens,
+                'duration_ms' => $durationMs,
+                'session'     => $session,
+            ]);
+            // ----------------------------------------
 
             $contentLines = explode("\n", $content);
             $lines = array_merge($lines, $contentLines);

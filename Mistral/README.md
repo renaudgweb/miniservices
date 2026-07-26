@@ -12,6 +12,28 @@
 - **Réponses intelligentes** : Profitez de réponses générées par l'IA pour une expérience utilisateur enrichie.
 - **Intégration avec l'API Mistral AI** : Exploitez les capacités avancées de l'API Mistral AI pour des fonctionnalités intelligentes.
 - **Navigation intuitive** : Utilisez les touches de votre Minitel pour naviguer facilement dans l'application.
+- **Livre d'or** : Consultez l'historique des échanges des utilisateurs via une page web au design rétro Minitel (`livre.php`).
+
+## 📖 Livre d'or (`livre.php`)
+
+Page web de recensement des interactions des utilisateurs, dans un style Minitel (fond noir, texte blanc laiteux, scanlines, curseur clignotant). Aucune base de données : lecture directe des fichiers log.
+
+- **Style rétro** : rendu façon terminal Minitel, responsive.
+- **Pagination** : 50 échanges par page (`?p=2`), du plus récent au plus ancien.
+- **Métadonnées** : durée de réponse, nombre de tokens, modèle utilisé, identifiant de session anonymisé.
+- **Sécurité** : tout le contenu est échappé (`htmlspecialchars`) pour éviter les injections.
+
+### Format des logs
+
+Les échanges sont écrits dans `mistral.log` au format **JSON Lines** (un objet JSON par ligne) :
+
+```json
+{"date":"2026-07-26T14:30:00+02:00","model":"mistral-medium-latest","user":"...","mistral":"...","tokens":128,"duration_ms":842,"session":"a3f19c2b4d5e"}
+```
+
+- **Rotation automatique** : au-delà de 2 Mo, `mistral.log` est archivé en `mistral_AAAAMMJJ-HHMMSS.log` ; `livre.php` lit le log courant **et** toutes les archives.
+- **Compatibilité** : `livre.php` gère aussi l'ancien format texte (`--------` séparateur), même mélangé au JSONL dans un même fichier.
+- **Session anonymisée** : l'identifiant MiniPavi est haché (SHA-256 tronqué) avec un sel. Personnaliser `MISTRAL_LOG_SALT` dans `MiniMistral.php` **une seule fois** avant la mise en production (le changer plus tard fait diverger les hachages).
 
 ## 🚀 Utilisation de la Passerelle MiniPavi
 
